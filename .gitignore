@@ -1,0 +1,17 @@
+.gradle/
+.kotlin/
+.cloud/
+**/build/
+local.properties
+*.jks
+*.keystore
+keystore.properties
+.idea/
+*.iml
+__pycache__/
+.DS_Store
+**/node_modules/
+**/.dart_tool/
+**/.flutter-plugins-dependencies
+**/coverage/
+**/test-results/

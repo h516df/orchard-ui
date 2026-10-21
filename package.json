@@ -1,0 +1,11 @@
+{
+  "name": "orchard-ui-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test:web": "playwright test",
+    "check:tokens": "python3 tools/generate_tokens.py --check",
+    "test:tokens": "python3 -m unittest discover -s tools/tests -v"
+  },
+  "devDependencies": {"@playwright/test": "1.56.1"}
+}

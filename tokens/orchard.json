@@ -1,0 +1,34 @@
+{
+  "version": "0.1.0",
+  "spacing": {"xs": 4, "sm": 8, "md": 12, "lg": 16, "xl": 24, "xxl": 32, "page": 20},
+  "radius": {"control": 14, "card": 24, "sheet": 28, "pill": 999},
+  "size": {"touch": 48, "contentMax": 720, "readingMax": 640},
+  "type": {"caption": 13, "label": 15, "body": 17, "title": 22, "largeTitle": 34},
+  "motion": {"fast": 120, "normal": 220, "slow": 320},
+  "neutral": {
+    "light": {"background": "#F5F5F7", "surface": "#FFFFFF", "surfaceMuted": "#EDEEF2", "text": "#202127", "textSecondary": "#5E616C", "outline": "#777B86", "divider": "#DFE1E8", "danger": "#B32631", "onDanger": "#FFFFFF", "dangerContainer": "#FFEDEF", "onDangerContainer": "#8D1A25", "success": "#23633C"},
+    "dark": {"background": "#111216", "surface": "#1D1F25", "surfaceMuted": "#2A2D36", "text": "#F3F3F6", "textSecondary": "#B5B9C6", "outline": "#8F94A2", "divider": "#3A3E49", "danger": "#FFB3B8", "onDanger": "#620E19", "dangerContainer": "#491C25", "onDangerContainer": "#FFD9DD", "success": "#9ED8B1"}
+  },
+  "palettes": {
+    "blue": {
+      "label": "清透蓝",
+      "light": {"primary": "#0062CC", "onPrimary": "#FFFFFF", "primaryContainer": "#E7F0FF", "onPrimaryContainer": "#17457E"},
+      "dark": {"primary": "#A4C8FF", "onPrimary": "#10315B", "primaryContainer": "#1D3555", "onPrimaryContainer": "#D7E7FF"}
+    },
+    "sage": {
+      "label": "纸感绿",
+      "light": {"primary": "#3E6651", "onPrimary": "#FFFFFF", "primaryContainer": "#E4EEE3", "onPrimaryContainer": "#294A35", "background": "#F5F4EF"},
+      "dark": {"primary": "#B3CFB6", "onPrimary": "#1E3928", "primaryContainer": "#2D4435", "onPrimaryContainer": "#DCEEDD", "background": "#161C18"}
+    },
+    "peach": {
+      "label": "暖杏色",
+      "light": {"primary": "#98452D", "onPrimary": "#FFFFFF", "primaryContainer": "#FFEBE3", "onPrimaryContainer": "#763621", "background": "#FCF5EF"},
+      "dark": {"primary": "#FFB79B", "onPrimary": "#57220F", "primaryContainer": "#513025", "onPrimaryContainer": "#FFDBCC", "background": "#211814"}
+    },
+    "ink": {
+      "label": "墨色紫",
+      "light": {"primary": "#60509A", "onPrimary": "#FFFFFF", "primaryContainer": "#EDE8FA", "onPrimaryContainer": "#483474"},
+      "dark": {"primary": "#CCBDF7", "onPrimary": "#342454", "primaryContainer": "#3C3157", "onPrimaryContainer": "#EAE0FF"}
+    }
+  }
+}
