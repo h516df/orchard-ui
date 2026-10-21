@@ -16,7 +16,7 @@
 4. 关键交互、主题/字号与构建有可追溯验证；未覆盖真机行为单列。
 5. 仓库自带开发助手入口与交接；不自动改写其他App。
 
-状态：首版开发与云端验证已完成，正在保存远端回执。准确仓库/提交与验证见 [HANDOFF](../HANDOFF.md)、[VERIFICATION](VERIFICATION.md)。
+状态：首版已实现、云端验证通过，源码已保存私有GitHub并通过PR #1合入main；后续项目接入与真机验收独立记录。准确仓库/提交与验证见 [HANDOFF](../HANDOFF.md)、[VERIFICATION](VERIFICATION.md)。
 
 代理选择：Orchard/果园名称；共享tokens + Compose/Flutter/RN/Web适配；4套配色、15类UX模式、12类页面配方；这些是授权范围内的实现选择，不代表用户指定了每个组件。
 
