@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN" data-orchard-palette="blue" data-orchard-mode="light">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="../orchard.css"><title>Orchard CSS test fixture</title></head>
+<body class="orchard">
+  <main class="o-page o-stack">
+    <h1 class="o-large-title">留一点时间给喜欢的事</h1>
+    <p class="o-caption">组件测试使用合成内容</p>
+    <section class="o-section" aria-labelledby="display-heading"><h2 id="display-heading">偏好设置</h2><div class="o-group">
+      <label class="o-row" for="feedback"><span>触感反馈，长文字也自然换行</span><input class="o-switch" id="feedback" type="checkbox" role="switch"></label>
+    </div></section>
+    <div class="o-field"><label for="note">正文</label><textarea id="note" class="o-input" aria-describedby="hint">还没写完的草稿</textarea><span id="hint" class="o-caption">保存失败时输入保留</span></div>
+    <div class="o-actions"><button type="button" class="o-button" id="save">保存</button><button type="button" class="o-button o-button--soft" id="open-dialog">更多选择</button></div>
+    <p id="status" role="status"></p>
+    <div class="o-banner"><h2 class="o-title">这里仍然保留</h2><p>网络不可用时，也能查看本地内容。</p></div>
+    <div class="o-reading"><h2 class="o-title">雨停之后</h2><p>窗外的树叶被洗得很亮。这是验证排版的合成文字。</p></div>
+    <fieldset class="o-segments"><legend>内容范围</legend><label><input type="radio" name="filter" value="all" checked>全部</label><label><input type="radio" name="filter" value="saved">已收藏</label></fieldset>
+  </main>
+  <dialog class="o-dialog" id="options" aria-labelledby="dialog-title"><h2 class="o-title" id="dialog-title">更多选择</h2><p>原生对话框提供焦点与键盘行为。</p><form method="dialog"><button class="o-button">完成</button></form></dialog>
+  <script>
+    const save = document.querySelector('#save');
+    let firstAttempt = true;
+    save.addEventListener('click', async () => {
+      save.disabled = true; save.setAttribute('aria-busy', 'true'); save.textContent = '保存中';
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      document.querySelector('#status').textContent = firstAttempt ? '保存失败，输入已保留，请重试。' : '已保存';
+      firstAttempt = false; save.disabled = false; save.removeAttribute('aria-busy'); save.textContent = '保存';
+    });
+    document.querySelector('#open-dialog').addEventListener('click', () => document.querySelector('#options').showModal());
+  </script>
+</body></html>

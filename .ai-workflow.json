@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "workflow_version": "0.1",
+  "source": "h516df/vibe-ui-quality-kit@e548b9c66075989847c0e528cd37031f438b1400/workflow",
+  "checks": [
+    {
+      "name": "shared-tokens-docs",
+      "level": "quick",
+      "command": [
+        "bash",
+        "cloud/check.sh",
+        "quick"
+      ],
+      "timeout_seconds": 120
+    },
+    {
+      "name": "android",
+      "level": "core",
+      "command": [
+        "bash",
+        "cloud/check.sh",
+        "android"
+      ],
+      "timeout_seconds": 900
+    },
+    {
+      "name": "flutter",
+      "level": "core",
+      "command": [
+        "bash",
+        "cloud/check.sh",
+        "flutter"
+      ],
+      "timeout_seconds": 900
+    },
+    {
+      "name": "react-native",
+      "level": "core",
+      "command": [
+        "bash",
+        "cloud/check.sh",
+        "react-native"
+      ],
+      "timeout_seconds": 900
+    },
+    {
+      "name": "web",
+      "level": "core",
+      "command": [
+        "bash",
+        "cloud/check.sh",
+        "web"
+      ],
+      "timeout_seconds": 900
+    }
+  ]
+}
