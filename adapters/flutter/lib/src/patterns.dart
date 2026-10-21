@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'components.dart';
 
 Future<bool> orchardConfirm(
@@ -9,17 +10,17 @@ Future<bool> orchardConfirm(
   String cancelLabel = '取消',
   bool destructive = false,
 }) async =>
-    await showDialog<bool>(
+    await showCupertinoDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (context) => CupertinoAlertDialog(
         title: Text(title),
         content: Text(message),
         actions: [
-          TextButton(
+          CupertinoDialogAction(
             onPressed: () => Navigator.pop(context, false),
             child: Text(cancelLabel),
           ),
-          TextButton(
+          CupertinoDialogAction(
             onPressed: () => Navigator.pop(context, true),
             child: Text(
               confirmLabel,
@@ -126,16 +127,23 @@ class _OrchardEditorScreenState extends State<OrchardEditorScreen> {
     onPopInvokedWithResult: (didPop, _) {
       if (!didPop) _close();
     },
-    child: Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        leading: IconButton(
-          tooltip: '返回',
-          onPressed: _close,
-          icon: const Icon(Icons.arrow_back),
+    child: CupertinoPageScaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      navigationBar: CupertinoNavigationBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        border: null,
+        middle: Text(widget.title),
+        leading: Tooltip(
+          message: '返回',
+          child: CupertinoButton(
+            padding: EdgeInsets.zero,
+            minimumSize: const Size(48, 48),
+            onPressed: _close,
+            child: const Icon(CupertinoIcons.back),
+          ),
         ),
       ),
-      body: SafeArea(
+      child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [

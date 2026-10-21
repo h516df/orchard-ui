@@ -1,5 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'dart:ui' show ImageFilter;
 import 'generated_tokens.dart';
+import 'theme.dart';
+
+Color _control(BuildContext context, String key) =>
+    Theme.of(context).extension<OrchardColors>()?[key] ??
+    Color(
+      orchardSchemes['blue']![Theme.of(context).brightness == Brightness.dark
+          ? 'dark'
+          : 'light']![key]!,
+    );
 
 enum OrchardButtonKind { filled, soft, plain, destructive }
 
@@ -20,36 +31,39 @@ class OrchardButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = Theme.of(context).colorScheme;
-    final action = loading ? null : onPressed;
-    final child = Text(
-      loading ? '$label · $loadingLabel' : label,
-      textAlign: TextAlign.center,
+    final background = switch (kind) {
+      OrchardButtonKind.filled => _control(context, 'buttonFill'),
+      OrchardButtonKind.soft => c.primaryContainer,
+      OrchardButtonKind.destructive => c.error,
+      OrchardButtonKind.plain => null,
+    };
+    final foreground = switch (kind) {
+      OrchardButtonKind.filled => _control(context, 'buttonText'),
+      OrchardButtonKind.soft => c.onPrimaryContainer,
+      OrchardButtonKind.destructive => c.onError,
+      OrchardButtonKind.plain => c.primary,
+    };
+    return Semantics(
+      liveRegion: loading,
+      child: CupertinoButton(
+        onPressed: loading ? null : onPressed,
+        color: background,
+        foregroundColor: foreground,
+        disabledColor: c.surfaceContainerHighest,
+        minimumSize: const Size(48, 48),
+        borderRadius: BorderRadius.circular(999),
+        pressedOpacity: .55,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        child: Text(
+          loading ? '$label · $loadingLabel' : label,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            color: foreground,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
     );
-    final Widget button;
-    if (kind == OrchardButtonKind.plain) {
-      button = TextButton(
-        onPressed: action,
-        style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
-        child: child,
-      );
-    } else {
-      button = FilledButton(
-        onPressed: action,
-        style: kind == OrchardButtonKind.soft
-            ? FilledButton.styleFrom(
-                backgroundColor: c.primaryContainer,
-                foregroundColor: c.onPrimaryContainer,
-              )
-            : kind == OrchardButtonKind.destructive
-            ? FilledButton.styleFrom(
-                backgroundColor: c.error,
-                foregroundColor: c.onError,
-              )
-            : null,
-        child: child,
-      );
-    }
-    return Semantics(liveRegion: loading, child: button);
   }
 }
 
@@ -57,7 +71,7 @@ class OrchardCard extends StatelessWidget {
   const OrchardCard({
     super.key,
     required this.child,
-    this.padding = const EdgeInsets.all(24),
+    this.padding = const EdgeInsets.all(20),
   });
   final Widget child;
   final EdgeInsetsGeometry padding;
@@ -115,39 +129,83 @@ class OrchardListRow extends StatelessWidget {
     this.value,
     this.onTap,
     this.destructive = false,
+    this.leading,
   });
   final String title;
   final String? subtitle;
   final String? value;
   final VoidCallback? onTap;
   final bool destructive;
+  final Widget? leading;
   @override
-  Widget build(BuildContext context) => ListTile(
-    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    onTap: onTap,
-    title: Text(
-      title,
-      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-        color: destructive ? Theme.of(context).colorScheme.error : null,
-      ),
-    ),
-    subtitle: subtitle == null && value == null
-        ? null
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (subtitle != null) Text(subtitle!),
-              if (value != null)
-                Text(
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final c = theme.colorScheme;
+    final large = MediaQuery.textScalerOf(context).scale(17) > 25.5;
+    final body = ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 52),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+        child: Row(
+          children: [
+            if (leading != null) ...[leading!, const SizedBox(width: 12)],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: destructive ? c.error : c.onSurface,
+                    ),
+                  ),
+                  if (subtitle != null) ...[
+                    const SizedBox(height: 3),
+                    Text(subtitle!, style: theme.textTheme.bodySmall),
+                  ],
+                  if (large && value != null)
+                    Text(
+                      value!,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: c.onSurfaceVariant,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            if (!large && value != null) ...[
+              const SizedBox(width: 12),
+              Flexible(
+                child: Text(
                   value!,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
+                  textAlign: TextAlign.end,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: c.onSurfaceVariant,
                   ),
                 ),
+              ),
             ],
-          ),
-    trailing: onTap != null ? const Icon(Icons.chevron_right) : null,
-  );
+            if (onTap != null) ...[
+              const SizedBox(width: 10),
+              Icon(
+                CupertinoIcons.chevron_forward,
+                size: 14,
+                color: c.onSurfaceVariant,
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+    return onTap == null
+        ? body
+        : CupertinoButton(
+            onPressed: onTap,
+            padding: EdgeInsets.zero,
+            minimumSize: const Size(48, 48),
+            child: body,
+          );
+  }
 }
 
 class OrchardSwitchRow extends StatelessWidget {
@@ -163,12 +221,41 @@ class OrchardSwitchRow extends StatelessWidget {
   final bool value;
   final ValueChanged<bool>? onChanged;
   @override
-  Widget build(BuildContext context) => SwitchListTile.adaptive(
-    title: Text(title),
-    subtitle: subtitle == null ? null : Text(subtitle!),
-    value: value,
-    onChanged: onChanged,
-    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  Widget build(BuildContext context) => MergeSemantics(
+    child: GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onChanged == null ? null : () => onChanged!(!value),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 34),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: Theme.of(context).textTheme.bodyLarge),
+                    if (subtitle != null)
+                      Text(
+                        subtitle!,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              CupertinoSwitch(
+                value: value,
+                onChanged: onChanged,
+                activeTrackColor: _control(context, 'toggleOn'),
+                inactiveTrackColor: _control(context, 'toggleOff'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
   );
 }
 
@@ -193,19 +280,79 @@ class OrchardTextField extends StatelessWidget {
   final bool enabled;
   final TextInputType? keyboardType;
   @override
-  Widget build(BuildContext context) => TextField(
-    controller: controller,
-    onChanged: onChanged,
-    maxLines: maxLines,
-    enabled: enabled,
-    keyboardType: keyboardType,
-    decoration: InputDecoration(
-      labelText: label,
-      helperText: hint,
-      errorText: error,
-      errorMaxLines: 4,
-    ),
-  );
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final stacked =
+        maxLines != 1 || MediaQuery.textScalerOf(context).scale(17) > 25.5;
+    final field = Semantics(
+      label: label,
+      child: CupertinoTextField(
+        controller: controller,
+        onChanged: onChanged,
+        maxLines: maxLines,
+        enabled: enabled,
+        keyboardType: keyboardType,
+        decoration: null,
+        padding: stacked
+            ? EdgeInsets.zero
+            : const EdgeInsets.symmetric(vertical: 13),
+        style: theme.textTheme.bodyLarge,
+        cursorColor: theme.colorScheme.primary,
+        textAlign: stacked ? TextAlign.start : TextAlign.end,
+        minLines: maxLines == 1 ? 1 : 6,
+      ),
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Padding(
+            padding: stacked
+                ? const EdgeInsets.all(16)
+                : const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+            child: stacked
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        label,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      field,
+                    ],
+                  )
+                : Row(
+                    children: [
+                      Text(label, style: theme.textTheme.bodyLarge),
+                      const SizedBox(width: 16),
+                      Expanded(child: field),
+                    ],
+                  ),
+          ),
+        ),
+        if (error != null || hint != null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
+            child: Semantics(
+              liveRegion: error != null,
+              child: Text(
+                error ?? hint!,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: error == null ? null : theme.colorScheme.error,
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
 }
 
 class OrchardSearchField extends StatelessWidget {
@@ -219,31 +366,23 @@ class OrchardSearchField extends StatelessWidget {
   final ValueChanged<String> onChanged;
   final String label;
   @override
-  Widget build(BuildContext context) =>
-      ValueListenableBuilder<TextEditingValue>(
-        valueListenable: controller,
-        builder: (context, value, _) => TextField(
-          controller: controller,
-          onChanged: onChanged,
-          decoration: InputDecoration(
-            labelText: label,
-            prefixIcon: const Icon(Icons.search),
-            suffixIcon: value.text.isEmpty
-                ? null
-                : IconButton(
-                    tooltip: '清除搜索',
-                    onPressed: () {
-                      controller.clear();
-                      onChanged('');
-                    },
-                    icon: const Icon(Icons.close),
-                  ),
-          ),
-        ),
-      );
+  Widget build(BuildContext context) => Semantics(
+    label: label,
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 48),
+      child: CupertinoSearchTextField(
+        controller: controller,
+        onChanged: onChanged,
+        placeholder: label,
+        style: Theme.of(context).textTheme.bodyLarge,
+        borderRadius: BorderRadius.circular(14),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+      ),
+    ),
+  );
 }
 
-class OrchardSegments<T> extends StatelessWidget {
+class OrchardSegments<T extends Object> extends StatelessWidget {
   const OrchardSegments({
     super.key,
     required this.options,
@@ -256,23 +395,74 @@ class OrchardSegments<T> extends StatelessWidget {
   final String Function(T) label;
   final ValueChanged<T> onSelected;
   @override
-  Widget build(BuildContext context) => Wrap(
-    spacing: 8,
-    runSpacing: 8,
-    children: options
-        .map(
-          (option) => ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 48),
-            child: ChoiceChip(
-              label: Text(label(option)),
-              selected: selected == option,
-              onSelected: (_) => onSelected(option),
-              materialTapTargetSize: MaterialTapTargetSize.padded,
-            ),
+  Widget build(BuildContext context) {
+    if (options.isEmpty) return const SizedBox.shrink();
+    final large = MediaQuery.textScalerOf(context).scale(17) > 25.5;
+    if (large || options.length == 1) {
+      return DecoratedBox(
+        decoration: BoxDecoration(
+          color: _control(context, 'segmentTrack'),
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              for (final option in options)
+                Semantics(
+                  selected: option == selected,
+                  child: CupertinoButton(
+                    onPressed: () => onSelected(option),
+                    color: option == selected
+                        ? _control(context, 'segmentThumb')
+                        : null,
+                    borderRadius: BorderRadius.circular(10),
+                    minimumSize: const Size(48, 48),
+                    padding: const EdgeInsets.all(12),
+                    child: Text(
+                      label(option),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                ),
+            ],
           ),
-        )
-        .toList(),
-  );
+        ),
+      );
+    }
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 48),
+      child: Center(
+        child: SizedBox(
+          width: double.infinity,
+          child: CupertinoSlidingSegmentedControl<T>(
+            groupValue: selected,
+            onValueChanged: (v) {
+              if (v != null) onSelected(v);
+            },
+            backgroundColor: _control(context, 'segmentTrack'),
+            thumbColor: _control(context, 'segmentThumb'),
+            children: {
+              for (final option in options)
+                option: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 7,
+                  ),
+                  child: Text(
+                    label(option),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+            },
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class OrchardLargeTitle extends StatelessWidget {
@@ -392,7 +582,7 @@ class OrchardEmptyState extends StatelessWidget {
     child: Column(
       children: [
         Icon(
-          Icons.auto_stories_outlined,
+          CupertinoIcons.book,
           size: 36,
           color: Theme.of(context).colorScheme.primary,
         ),
@@ -449,7 +639,7 @@ class OrchardLoadingState extends StatelessWidget {
           const SizedBox(
             width: 28,
             height: 28,
-            child: CircularProgressIndicator(),
+            child: CupertinoActivityIndicator(),
           ),
           const SizedBox(height: 16),
           Text(label),
@@ -496,7 +686,7 @@ class OrchardReadingSurface extends StatelessWidget {
     child: ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: OrchardTokens.sizeReadingMax),
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -514,4 +704,153 @@ class OrchardReadingSurface extends StatelessWidget {
       ),
     ),
   );
+}
+
+class OrchardIconTile extends StatelessWidget {
+  const OrchardIconTile({super.key, required this.icon, required this.color});
+  final IconData icon;
+  final Color color;
+  @override
+  Widget build(BuildContext context) => DecoratedBox(
+    decoration: BoxDecoration(
+      color: color,
+      borderRadius: BorderRadius.circular(7),
+    ),
+    child: SizedBox(
+      width: 30,
+      height: 30,
+      child: Icon(icon, color: CupertinoColors.white, size: 19),
+    ),
+  );
+}
+
+class OrchardGlassSurface extends StatelessWidget {
+  const OrchardGlassSurface({
+    super.key,
+    required this.child,
+    this.reducedTransparency = false,
+  });
+  final Widget child;
+  final bool reducedTransparency;
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).colorScheme;
+    final body = DecoratedBox(
+      decoration: BoxDecoration(
+        color: c.surface.withValues(alpha: reducedTransparency ? 1 : .8),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(
+          color: c.outlineVariant.withValues(alpha: .5),
+          width: .75,
+        ),
+      ),
+      child: child,
+    );
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(999),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x18000000),
+            blurRadius: 20,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(999),
+        child: reducedTransparency
+            ? body
+            : BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+                child: body,
+              ),
+      ),
+    );
+  }
+}
+
+class OrchardDestination {
+  const OrchardDestination({
+    required this.key,
+    required this.label,
+    required this.icon,
+  });
+  final String key;
+  final String label;
+  final IconData icon;
+}
+
+class OrchardTabBar extends StatelessWidget {
+  const OrchardTabBar({
+    super.key,
+    required this.destinations,
+    required this.selected,
+    required this.onSelect,
+    this.reducedTransparency = false,
+  });
+  final List<OrchardDestination> destinations;
+  final String selected;
+  final ValueChanged<String> onSelect;
+  final bool reducedTransparency;
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).colorScheme;
+    return SafeArea(
+      top: false,
+      minimum: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+      child: OrchardGlassSurface(
+        reducedTransparency: reducedTransparency,
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: Row(
+            children: [
+              for (final destination in destinations)
+                Expanded(
+                  child: Semantics(
+                    selected: destination.key == selected,
+                    inMutuallyExclusiveGroup: true,
+                    child: CupertinoButton(
+                      onPressed: () => onSelect(destination.key),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 8,
+                      ),
+                      minimumSize: const Size(48, 58),
+                      borderRadius: BorderRadius.circular(999),
+                      color: destination.key == selected
+                          ? c.onSurface.withValues(alpha: .065)
+                          : null,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            destination.icon,
+                            size: 24,
+                            color: destination.key == selected
+                                ? c.primary
+                                : c.onSurfaceVariant,
+                          ),
+                          Text(
+                            destination.label,
+                            style: TextStyle(
+                              fontSize: 11,
+                              height: 1.3,
+                              fontWeight: FontWeight.w600,
+                              color: destination.key == selected
+                                  ? c.primary
+                                  : c.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

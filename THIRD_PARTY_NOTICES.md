@@ -9,7 +9,7 @@
 | [Gradle 9.1.0](https://github.com/gradle/gradle/tree/v9.1.0) | Gradle Wrapper 与构建工具 | Apache-2.0；[附带许可](third_party/gradle-LICENSE.txt)，脚本原版权头保留；分发校验值固定 |
 | [AndroidX / Jetpack Compose](https://android.googlesource.com/platform/frameworks/support/) | Compose 组件、Activity 与测试接口 | Apache-2.0；依赖按 Gradle 固定版本解析 |
 | [Kotlin](https://github.com/JetBrains/kotlin) | Kotlin/Compose 编译插件 | Apache-2.0 |
-| [Flutter](https://github.com/flutter/flutter/tree/3.41.5) | Flutter SDK 的官方 widgets、Material 图标与测试 | Flutter BSD-3-Clause；SDK 内各资源保留各自声明，未单独拷贝资源文件入库 |
+| [Flutter](https://github.com/flutter/flutter/tree/3.41.5) | Flutter SDK 的官方 widgets、Material 图标与测试 | Flutter BSD-3-Clause；0.2使用SDK内置Cupertino控件，cupertino_icons1.0.8按其MIT许可引用；SDK 内各资源保留各自声明，未单独拷贝资源文件入库 |
 | [React Native](https://github.com/facebook/react-native/tree/v0.83.2) / [React](https://github.com/facebook/react) | RN 组件与测试 | MIT；通过 npm 依赖引用 |
 | [Playwright](https://github.com/microsoft/playwright) | Web 交互测试 | Apache-2.0；仅开发依赖 |
 | [Robolectric](https://github.com/robolectric/robolectric) / [Roborazzi](https://github.com/takahirom/roborazzi) | Compose 宿主测试与画面输出 | MIT；仅测试依赖 |

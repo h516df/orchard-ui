@@ -11,6 +11,27 @@ enum OrchardPalette {
   final String label;
 }
 
+@immutable
+class OrchardColors extends ThemeExtension<OrchardColors> {
+  const OrchardColors(this.values);
+  final Map<String, int> values;
+  Color operator [](String key) => Color(values[key]!);
+  @override
+  OrchardColors copyWith({Map<String, int>? values}) =>
+      OrchardColors(values ?? this.values);
+  @override
+  OrchardColors lerp(OrchardColors? other, double t) => other == null
+      ? this
+      : OrchardColors({
+          for (final entry in values.entries)
+            entry.key: Color.lerp(
+              Color(entry.value),
+              Color(other.values[entry.key] ?? entry.value),
+              t,
+            )!.toARGB32(),
+        });
+}
+
 ThemeData orchardThemeData({
   OrchardPalette palette = OrchardPalette.blue,
   Brightness brightness = Brightness.light,
@@ -46,11 +67,13 @@ ThemeData orchardThemeData({
     colorScheme: scheme,
   );
   return base.copyWith(
+    extensions: [OrchardColors(values)],
     scaffoldBackgroundColor: c('background'),
     textTheme: base.textTheme.copyWith(
       headlineLarge: TextStyle(
         fontSize: OrchardTokens.typeLargeTitle,
         height: 1.2,
+        letterSpacing: -.8,
         fontWeight: FontWeight.w700,
         color: c('text'),
       ),
@@ -62,7 +85,8 @@ ThemeData orchardThemeData({
       ),
       bodyLarge: TextStyle(
         fontSize: OrchardTokens.typeBody,
-        height: 1.55,
+        height: 1.3,
+        letterSpacing: -.2,
         color: c('text'),
       ),
       bodyMedium: TextStyle(

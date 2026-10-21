@@ -34,3 +34,9 @@
 交互由宿主负责：按钮加载时同时设置 `disabled`、`aria-busy` 与可见状态文字；输入错误同时设置 `aria-invalid` 和关联说明；反馈使用适当的 `role="status"`。对话框使用原生 `<dialog>.showModal()`，标注 `aria-labelledby`，确认按钮执行成功后再关闭，关闭后把焦点交还触发点。不要只用一个 div 模拟弹窗。删除确认、编辑草稿、导航保护与系统返回按 [UX 模式](../../docs/UX_PATTERNS.md) 实现；样式本身不会提供存储、路由或原生权限能力。
 
 在 WebView / Capacitor 中，安全区、软键盘、Android 系统返回和文件选择仍需对应容器验证。没有声称 CSS 能处理这些系统能力。
+
+## 0.2 Apple外形
+
+按钮为胶囊；输入可用`.o-field--inline`把标签与值放在同一行；分段是连续轨道，不是独立标签；开关为绿色轨道与白色滑块；`.o-bottom-nav`是浮动材质导航。列表前导图标使用`.o-icon-tile`，内容使用`.o-row__content`，次级值使用`.o-row__value`。
+
+系统减少动态效果保持有效；降低透明度可设`data-orchard-transparency="reduced"`，或由受支持浏览器读取prefers-reduced-transparency。背景模糊依赖浏览器backdrop-filter支持；不支持时宿主应设置不透明回退。细节见[Apple视觉基线](../../docs/APPLE_VISUALS.md)。

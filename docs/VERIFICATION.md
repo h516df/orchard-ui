@@ -1,3 +1,25 @@
+# 验证记录 · 0.2 Apple视觉修正
+
+日期：2026-10-21。基线为0.1主线`64721540a26c9521c5f108a7b6871d44cc68adb9`，本批分支`fix/apple-native-visuals`；以下结果来自本批修改后的工作树，验证后提交，准确来源由PR/HANDOFF远端回执绑定。用户未接受0.1的视觉，旧测试通过不能代表新的视觉被认可。
+
+| 范围 | 本批命令 | 结果 |
+| --- | --- | --- |
+| 共享变量 | `python3 -m unittest discover -s tools/tests -v` | passed，3项，8主题方案的常用文字/新按钮色对、触控/字号、四适配层生成同步 |
+| Android | `bash cloud/check.sh android`，完整JDK21/SDK36 | passed，release AAR/debug Catalog APK、13项实际Compose UI测试、两个模块lint |
+| Flutter | `flutter analyze` / `flutter test`，SDK3.41.5 | passed，分析无问题，6项widget test：Cupertino控件、浮动导航/透明度回退、保存重试、返回保护、大字号/主题 |
+| React Native | `npm run typecheck` / `npm test` | passed，6项renderer/unit test：控件语义、主题、保存保留、Provider确认取消/卸载、Android返回接线；没有构建RN APK |
+| Web | `CHROMIUM_PATH=/usr/bin/chromium npm run test:web` | passed，5项：键盘选择、保存失败/重试、dialog焦点/Escape、8主题320px/200%基础字号、减少动效、浮动导航选择/不透明回退 |
+
+共33项测试。Compose新增覆盖搜索/分类、导航切换保留输入/开关、Apple确认布局、降低透明度，并输出8张实际宿主渲染。代码/样本由同一工作树产生，预览复制前核对输出；新版本图不是概念图或图像生成结果。
+
+视觉对照：[Apple基线](APPLE_VISUALS.md)；[新版预览](previews/README.md)。构建/测试证明可执行性与指定行为，不证明用户已认可外观。
+
+已知边界：实体安卓上的系统栏、IME、预测性返回、TalkBack实际朗读、低端性能和动效顺滑度尚未验收；Flutter/RN原生APK与宿主路由未验。Compose API31+模糊的旧系统回退分支有实现，未声称每个旧系统/厂商设备都测过。RN默认不透明，可插入宿主模糊层；没有声称已实现Apple专有折射引擎。Actions仍为手动工作流，本批未运行，没有正式App发布。
+
+本批其余静态检查与远端回执在HANDOFF记录；下方保留0.1历史，不能用于冒充0.2结果。旧版图片可在Git标签v0.1.0查看。
+
+---
+
 # 验证记录 · 0.1.0
 
 日期：2026-10-21。已验证源码提交为 `8eecdc49f04526b30e65d4f5df31433f527393da`，通过 [PR #1](https://github.com/h516df/orchard-ui/pull/1) 合入 main；后续回执提交只更新文档。这里没有引用用户其他 App 的历史通过结果。
