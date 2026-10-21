@@ -11,11 +11,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 fun OrchardCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
     Surface(modifier.fillMaxWidth(), shape = RoundedCornerShape(OrchardTokens.radius_card.dp), color = MaterialTheme.colorScheme.surface) {
-        Column(Modifier.padding(OrchardTokens.spacing_xl.dp), verticalArrangement = Arrangement.spacedBy(12.dp), content = content)
+        Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp), content = content)
     }
 }
 
@@ -29,7 +34,7 @@ fun OrchardGroup(modifier: Modifier = Modifier, content: @Composable ColumnScope
 @Composable
 fun OrchardSection(title: String, modifier: Modifier = Modifier, footnote: String? = null, content: @Composable ColumnScope.() -> Unit) {
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(title, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant,
+        Text(title, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(start = 12.dp).semantics { heading() })
         OrchardGroup(content = content)
         footnote?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(horizontal = 12.dp)) }
@@ -37,25 +42,35 @@ fun OrchardSection(title: String, modifier: Modifier = Modifier, footnote: Strin
 }
 
 @Composable
-fun OrchardDivider(modifier: Modifier = Modifier) {
-    HorizontalDivider(modifier.padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outlineVariant)
+fun OrchardDivider(modifier: Modifier = Modifier, leadingInset: Dp = 16.dp) {
+    HorizontalDivider(modifier.padding(start = leadingInset), thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+}
+
+@Composable
+fun OrchardIconTile(icon: ImageVector, color: Color, modifier: Modifier = Modifier) {
+    Surface(modifier.size(30.dp), shape = RoundedCornerShape(7.dp), color = color) {
+        Box(contentAlignment = Alignment.Center) { Icon(icon, null, tint = Color.White, modifier = Modifier.size(19.dp)) }
+    }
 }
 
 @Composable
 fun OrchardListRow(title: String, modifier: Modifier = Modifier, subtitle: String? = null, value: String? = null, onClick: (() -> Unit)? = null, destructive: Boolean = false, leading: (@Composable () -> Unit)? = null) {
     val c = MaterialTheme.colorScheme
+    val large = LocalDensity.current.fontScale > 1.5f
     Row(
-        modifier.fillMaxWidth().then(if (onClick != null) Modifier.clickable(role = Role.Button, onClick = onClick) else Modifier)
-            .padding(16.dp).heightIn(min = 40.dp),
+        modifier.fillMaxWidth().then(if (onClick != null) Modifier.clickable(interactionSource = orchardPressSource(), indication = null, role = Role.Button, onClick = onClick) else Modifier)
+            .padding(horizontal = 16.dp, vertical = 11.dp).heightIn(min = 30.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically,
     ) {
         leading?.invoke()
-        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
             Text(title, style = MaterialTheme.typography.bodyLarge, color = if (destructive) c.error else c.onSurface)
             subtitle?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = c.onSurfaceVariant) }
-            value?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = c.primary) }
+            if (large && value != null) Text(value, style = MaterialTheme.typography.bodyMedium, color = c.onSurfaceVariant)
         }
-        if (onClick != null) Icon(OrchardIcons.Chevron, null, tint = c.onSurfaceVariant)
+        if (!large && value != null) Text(value, style = MaterialTheme.typography.bodyLarge, color = c.onSurfaceVariant,
+            modifier = Modifier.widthIn(max = 120.dp), textAlign = TextAlign.End)
+        if (onClick != null) Icon(OrchardIcons.Chevron, null, tint = c.onSurfaceVariant.copy(alpha = .6f), modifier = Modifier.size(13.dp))
     }
 }
 
@@ -104,7 +119,7 @@ fun OrchardEmptyState(title: String, body: String, modifier: Modifier = Modifier
 fun OrchardLoadingState(modifier: Modifier = Modifier, label: String = "正在加载") {
     Column(modifier.fillMaxWidth().padding(32.dp).semantics { liveRegion = LiveRegionMode.Polite },
         horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        CircularProgressIndicator(modifier = Modifier.size(28.dp))
+        OrchardActivityIndicator(Modifier.size(22.dp))
         Text(label, style = MaterialTheme.typography.bodyMedium)
     }
 }
@@ -127,6 +142,9 @@ fun OrchardSkeleton(modifier: Modifier = Modifier) {
 fun OrchardProgress(progress: Float, label: String, modifier: Modifier = Modifier) {
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(label, style = MaterialTheme.typography.bodyMedium)
-        LinearProgressIndicator(progress = { progress.coerceIn(0f, 1f) }, modifier = Modifier.fillMaxWidth().semantics { contentDescription = label })
+        Box(Modifier.fillMaxWidth().height(4.dp).background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(2.dp))
+            .semantics { contentDescription = label; progressBarRangeInfo = ProgressBarRangeInfo(progress.coerceIn(0f, 1f), 0f..1f) }) {
+            Box(Modifier.fillMaxWidth(progress.coerceIn(0f, 1f)).height(4.dp).background(MaterialTheme.colorScheme.primary, RoundedCornerShape(2.dp)))
+        }
     }
 }

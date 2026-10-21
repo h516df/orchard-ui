@@ -28,7 +28,7 @@ git submodule add https://github.com/h516df/orchard-ui.git vendor/orchard-ui
 ./gradlew :orchard:publishReleasePublicationToMavenLocal
 ```
 
-目标工程的 repositories 添加 `mavenLocal()`，模块依赖 `implementation("dev.h516.orchard:orchard:0.1.0")`。这是本地缓存，不是已上传 Maven Central 或 GitHub Packages；换机器需重建。
+目标工程的 repositories 添加 `mavenLocal()`，模块依赖 `implementation("dev.h516.orchard:orchard:0.2.0")`。这是本地缓存，不是已上传 Maven Central 或 GitHub Packages；换机器需重建。
 
 **选项 B：固定源码的 composite build**，适合版本相容的长期接入：
 
@@ -43,7 +43,7 @@ includeBuild("vendor/orchard-ui") {
 
 ```kotlin
 // app/build.gradle.kts
-dependencies { implementation("dev.h516.orchard:orchard:0.1.0") }
+dependencies { implementation("dev.h516.orchard:orchard:0.2.0") }
 
 // 界面入口，存储与回调继续用原项目实现
 OrchardTheme(palette = OrchardPalette.Sage) {
@@ -82,7 +82,7 @@ MaterialApp(
 );
 ```
 
-`MaterialApp` / Navigator 保留真实平台设置，不把整个安卓工程强制伪装为其他平台。按钮、分组与主题表达风格；系统导航和权限沿官方适配。外部 controller 由宿主 dispose，保存状态与草稿落盘由宿主维护。完整可复制示例见 [gallery.dart](../adapters/flutter/example/gallery.dart)。
+`MaterialApp` / Navigator 保留真实平台设置，不把整个安卓工程强制伪装为其他平台。视觉默认使用Cupertino按钮、开关、输入、分段和确认；不能用.adaptive()把安卓外形带回来。系统返回、路由与权限仍按实际平台处理。外部 controller 由宿主 dispose，保存状态与草稿落盘由宿主维护。完整可复制示例见 [gallery.dart](../adapters/flutter/example/gallery.dart)。
 
 ## React Native
 
@@ -105,7 +105,7 @@ import {OrchardProvider, OrchardSection, OrchardSwitchRow} from '@h516df/orchard
 </OrchardProvider>
 ```
 
-宿主负责 SafeAreaProvider/安全区、系统栏、IME、路由和本地偏好。编辑模板拦截 Android hardware back 与自己的返回按钮；React Navigation 的 header、beforeRemove、手势离开等必须统一连到草稿保护规则。示例见 [Gallery.tsx](../adapters/react-native/example/Gallery.tsx)。
+宿主负责 SafeAreaProvider/安全区、系统栏、IME、路由和本地偏好。0.2确认调用改为Provider内的`useOrchardConfirm()`或受控`OrchardConfirmDialog`，不再使用默认Android Alert。`OrchardTabBar`可直接使用；背景模糊需传renderBackdrop，默认实色。编辑模板拦截 Android hardware back 与自己的返回按钮；React Navigation 的 header、beforeRemove、手势离开等必须统一连到草稿保护规则。示例见 [Gallery.tsx](../adapters/react-native/example/Gallery.tsx)。
 
 ## Web / React / Vue / 混合容器
 

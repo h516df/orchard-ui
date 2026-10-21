@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:orchard_ui/orchard_ui.dart';
 
@@ -17,6 +18,46 @@ Widget app(
 );
 
 void main() {
+  testWidgets('floating navigation stays usable with reduced transparency', (
+    tester,
+  ) async {
+    for (final reduced in [false, true]) {
+      var selected = 'browse';
+      await tester.pumpWidget(
+        app(
+          SizedBox(
+            height: 200,
+            child: StatefulBuilder(
+              builder: (context, update) => Align(
+                alignment: Alignment.bottomCenter,
+                child: OrchardTabBar(
+                  destinations: const [
+                    OrchardDestination(
+                      key: 'browse',
+                      label: '浏览',
+                      icon: CupertinoIcons.square_grid_2x2,
+                    ),
+                    OrchardDestination(
+                      key: 'patterns',
+                      label: '场景',
+                      icon: CupertinoIcons.book,
+                    ),
+                  ],
+                  selected: selected,
+                  onSelect: (value) => update(() => selected = value),
+                  reducedTransparency: reduced,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('场景'));
+      await tester.pumpAndSettle();
+      expect(selected, 'patterns');
+      expect(tester.takeException(), isNull);
+    }
+  });
   testWidgets(
     'busy button prevents duplicate submission and announces progress',
     (tester) async {
@@ -29,7 +70,7 @@ void main() {
       await tester.tap(find.text('保存 · 正在处理'));
       expect(count, 0);
       expect(
-        tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+        tester.widget<CupertinoButton>(find.byType(CupertinoButton)).onPressed,
         isNull,
       );
       await tester.pumpWidget(
@@ -69,7 +110,7 @@ void main() {
     await tester.tap(find.text('收藏'));
     await tester.pump();
     expect(selected, '收藏');
-    await tester.tap(find.byType(Switch));
+    await tester.tap(find.byType(CupertinoSwitch));
     await tester.pump();
     expect(enabled, isTrue);
   });

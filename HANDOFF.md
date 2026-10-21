@@ -1,3 +1,19 @@
+# 当前交接 · Orchard UI 0.2 Apple视觉修正
+
+日期：2026-10-21。当前目标与长期视觉规则见docs/APPLE_VISUALS.md；需求状态见docs/BACKLOG.md。
+
+- **用户纠正**：“不行呀，我要的是苹果，你这像是古早安卓”。0.1视觉不被用户接受，不能用当时26个测试代替视觉认可。
+- **分支/基线**：fix/apple-native-visuals / main@64721540a26c9521c5f108a7b6871d44cc68adb9；只修改本库，不改其他App、签名或数据。
+- **已修改**：四框架共享Apple视觉变量；胶囊按钮、绿色开关、连续滑动分段、无浮动标签输入、紧凑分组列表、浮动导航、居中分隔动作确认；深色按钮填充与链接色分开。Compose自绘，Flutter默认Cupertino，RN用受控原语与Provider确认，Web保留原生HTML语义并重绘。
+- **新增接口**：OrchardGlassSurface；Flutter/RN新增OrchardTabBar；RN确认改用useOrchardConfirm()或OrchardConfirmDialog，旧模块级orchardConfirm()不再导出。Compose OrchardTheme新增reducedTransparency，Scaffold保留参数使用习惯，但滚动底部留白需放到滚动容器内以支持底栏后滚动。
+- **材质边界**：Compose API31+记录独立内容图层并采样模糊，旧API/大字号/降低透明度走实色；FlutterBackdropFilter/Webbackdrop-filter；RN默认实色，模糊由renderBackdrop注入。不宣称完整Apple专有Liquid Glass引擎。
+- **本批验证**：共享3、Compose13、Flutter6、RN6、Web5，共33项passed；Android release AAR/debug APK/lint passed；Flutter analyze与RN typecheck passed。准确命令与未覆盖项见docs/VERIFICATION.md；新渲染图由本批宿主运行产生。Maven local 0.2发布也通过；8张预览已与最后一次宿主输出逐字节核对，准确源码来源将在提交与PR回执中绑定。
+- **未覆盖**：真机IME/系统栏/TalkBack/预测性返回/性能与动画顺滑度、Flutter/RN原生构建和宿主路由。没有运行Actions或发布已有App。
+- **保存计划**：在既有私有仓库建立本批PR；核对远端后合入本任务成果，保留v0.1.0标签作为历史，新版本v0.2.0。无额外权限/付费/其他仓库变更。
+- **接续**：先读本段、AGENTS与Apple视觉基线，核对远端main和本批PR。未来UI改动不得回退到默认Material/.adaptive安卓外形；具体项目接入需在其授权范围内进行。
+
+## 0.1历史交接（保留，不代表视觉获认可）
+
 # 当前交接 · Orchard UI 0.1.0
 
 日期：2026-10-21。先读 AGENTS、README、CLOUD_DEVELOPMENT，再核对 GitHub main、任务分支与相关 PR。

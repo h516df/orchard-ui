@@ -15,8 +15,8 @@
 
 | 需求 | 官方/成熟候选 | 本库如何搭配 |
 | --- | --- | --- |
-| 安卓主题、控件、语义与状态 | [Jetpack Compose / Material 3](https://developer.android.com/develop/ui/compose/designsystems/material3) | 已依赖；在其上定义 Orchard 主题与组合，不重写焦点/语义引擎 |
-| Flutter 组件与平台适配 | [Flutter widgets](https://docs.flutter.dev/ui/widgets) · [自动平台适配](https://docs.flutter.dev/ui/adaptive-responsive/platform-adaptations) | 已依赖 SDK；系统行为保留，视觉可定制；Cupertino 是参考与可选控件，不把平台全局硬改 |
+| 安卓主题、控件、语义与状态 | [Jetpack Compose / Material 3](https://developer.android.com/develop/ui/compose/designsystems/material3) | 已依赖；基础主题/布局与语义可复用；可见控件按Orchard Apple基线绘制，不沿用默认Material外观 |
+| Flutter 组件与平台适配 | [Flutter widgets](https://docs.flutter.dev/ui/widgets) · [自动平台适配](https://docs.flutter.dev/ui/adaptive-responsive/platform-adaptations) | 已依赖 SDK；系统行为保留，视觉可定制；0.2默认使用固定SDK内置Cupertino控件，不把平台全局硬改 |
 | RN 交互、原生开关与无障碍 | [React Native components](https://reactnative.dev/docs/components-and-apis) · [Accessibility](https://reactnative.dev/docs/0.83/accessibility) | 已依赖；路由和安全区由宿主选型 |
 | 导航 | [Android Navigation](https://developer.android.com/guide/navigation) / [Flutter Navigator](https://docs.flutter.dev/ui/navigation) / [React Navigation](https://reactnavigation.org/docs/getting-started) | 候选；接草稿保护与状态恢复，不在库里强制路由方案 |
 | 视频和音频 | [Android Media3](https://developer.android.com/media/media3) / [Flutter video_player](https://pub.dev/packages/video_player) | 候选；现有记一下已有 Media3，优先沿用；明确后台、缓存与资源释放 |

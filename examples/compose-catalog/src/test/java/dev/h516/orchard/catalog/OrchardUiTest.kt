@@ -26,11 +26,11 @@ import java.io.File
 @Config(sdk = [35], application = Application::class, qualifiers = "zh-rCN-w393dp-h852dp-xhdpi")
 class OrchardUiTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
-    private fun capture(name: String) {
+    private fun capture(name: String, dialog: Boolean = false) {
         compose.waitForIdle()
         val file = File("build/outputs/orchard-ui/$name.png")
         file.parentFile!!.mkdirs()
-        compose.onRoot().captureRoboImage(file.absolutePath)
+        (if (dialog) compose.onNode(isDialog()) else compose.onRoot()).captureRoboImage(file.absolutePath)
         assertTrue("Host render must produce a real image", file.isFile && file.length() > 0)
     }
 
@@ -85,6 +85,43 @@ class OrchardUiTest {
 
     @Test fun componentsLightRender() { compose.setContent { CatalogApp(initialDark = false) }; capture("components-light") }
     @Test fun componentsDarkRender() { compose.setContent { CatalogApp(initialDark = true) }; capture("components-dark") }
+    @Test fun groupedListCategoryAndSearchWork() {
+        compose.setContent { CatalogApp(initialDark = false) }
+        compose.onNodeWithText("列表").performClick()
+        compose.onNodeWithText("跟随系统").assertExists()
+        capture("grouped-lists-light")
+        compose.onNodeWithText("控件").performClick()
+        compose.onNodeWithContentDescription("搜索组件").performTextReplacement("偏好")
+        compose.onNodeWithText("触感反馈").assertExists()
+        compose.onNodeWithText("继续").assertDoesNotExist()
+        compose.onNodeWithContentDescription("清除搜索").performClick()
+        compose.onNodeWithText("继续").assertExists()
+    }
+    @Test fun appleDialogAndOpaqueGlassRender() {
+        var open by mutableStateOf(true)
+        compose.setContent { OrchardTheme {
+            if (open) OrchardConfirmDialog("删除这条记录？", "这是一个确认样例，不会删除你的资料。", "删除", { open = false }, { open = false }, destructive = true)
+        } }
+        capture("confirmation-light", dialog = true)
+        compose.onNodeWithText("取消").performClick()
+        assertFalse(open)
+    }
+    @Test fun reducedTransparencyRetainsNavigation() {
+        compose.setContent { CatalogApp(initialDark = false, initialTab = "appearance") }
+        compose.onNodeWithText("降低透明度").performScrollTo().performClick().assertIsOn()
+        compose.onNodeWithText("浏览").performClick()
+        compose.onNodeWithText("组件").assertExists()
+        capture("components-opaque-glass-light")
+    }
+    @Test fun tabNavigationKeepsControlValues() {
+        compose.setContent { CatalogApp(initialDark = false) }
+        compose.onNodeWithContentDescription("名称").performTextReplacement("我的组件")
+        compose.onNodeWithText("触感反馈").performClick().assertIsOff()
+        compose.onNodeWithText("外观").performClick()
+        compose.onNodeWithText("浏览").performClick()
+        compose.onNodeWithContentDescription("名称").assertTextContains("我的组件")
+        compose.onNodeWithText("触感反馈").assertIsOff()
+    }
     @Test fun settingsChangePalette() {
         compose.setContent { CatalogApp(initialDark = false) }
         compose.onNodeWithText("外观").performClick()
@@ -96,14 +133,14 @@ class OrchardUiTest {
     fun narrowLargeTextLight() {
         RuntimeEnvironment.setFontScale(2f)
         compose.setContent { CatalogApp(initialDark = false) }
-        compose.onNodeWithText("少一点打扰").assertIsDisplayed()
+        compose.onNodeWithText("组件").assertIsDisplayed()
         capture("components-320dp-font200-light")
     }
     @Test @Config(qualifiers = "zh-rCN-w320dp-h1000dp-night-xhdpi")
     fun narrowLargeTextDark() {
         RuntimeEnvironment.setFontScale(2f)
         compose.setContent { CatalogApp(initialDark = true) }
-        compose.onNodeWithText("少一点打扰").assertIsDisplayed()
+        compose.onNodeWithText("组件").assertIsDisplayed()
         capture("components-320dp-font200-dark")
     }
 }

@@ -27,3 +27,13 @@ test('reduced motion disables component transitions', async ({page}) => {
   await page.emulateMedia({reducedMotion: 'reduce'});
   await expect(page.getByRole('button', {name: '保存', exact: true})).toHaveCSS('transition-duration', '0s');
 });
+test('floating navigation updates selection and supports opaque fallback', async ({page}) => {
+  const nav = page.getByRole('navigation', {name: '组件导航'});
+  await nav.getByRole('link', {name: '内容'}).click();
+  await expect(nav.getByRole('link', {name: '内容'})).toHaveAttribute('aria-current', 'page');
+  await expect(nav).toHaveCSS('position', 'fixed');
+  await page.evaluate(() => {document.documentElement.dataset.orchardTransparency = 'reduced';});
+  await expect(nav).toHaveCSS('backdrop-filter', 'none');
+  await nav.getByRole('link', {name: '浏览'}).click();
+  await expect(nav.getByRole('link', {name: '浏览'})).toHaveAttribute('aria-current', 'page');
+});

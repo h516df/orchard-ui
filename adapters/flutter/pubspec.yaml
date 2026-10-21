@@ -1,11 +1,12 @@
 name: orchard_ui
 description: Private Apple-inspired UI and UX building blocks with Android-friendly behavior.
-version: 0.1.0
+version: 0.2.0
 publish_to: none
 environment:
   sdk: '>=3.11.0 <4.0.0'
   flutter: '>=3.41.0'
 dependencies:
+  cupertino_icons: 1.0.8
   flutter:
     sdk: flutter
 dev_dependencies:

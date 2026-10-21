@@ -2,7 +2,7 @@
 
 **给 h516df 的跨项目 UI / UX 复用库。苹果风视觉，安卓友好的交互，不绑定技术栈。私有仓库。**
 
-[查看浅深色与大字号预览](docs/previews/README.md)
+**0.2 按苹果原生控件的外形与布局重做。** [查看新版实际预览](docs/previews/README.md) · [视觉基线与实现边界](docs/APPLE_VISUALS.md)
 
 不是每个新项目重新调一遍圆角、列表和保存流程。把共同的视觉变量、组件与体验规则集中在这里，项目保留自己的产品性格和数据逻辑。
 
@@ -23,7 +23,7 @@
 
 - **共享设计变量**：4 套配色 × 深浅色，语义色、字阶、间距、圆角、触控尺寸、动效时间。JSON 为源，生成 Kotlin、Dart、TypeScript、CSS；有同步和对比度检查。
 - **Compose 适配层**：[代码](adapters/compose/orchard/src/main/java/dev/h516/orchard)；主题、常用控件、列表/分组/状态、导航、弹层，以及列表、设置、草稿编辑、导入预览和阅读模式。
-- **Flutter 适配层**：[代码](adapters/flutter/lib)；主题和常用组件、设置页、草稿编辑、导入预览，使用官方 Flutter widgets。
+- **Flutter 适配层**：[代码](adapters/flutter/lib)；主题和常用组件、设置页、草稿编辑、导入预览，默认使用 Cupertino 控件。
 - **React Native 适配层**：[代码](adapters/react-native/src)；主题 Provider、常用组件、弹层和草稿编辑，使用 React Native primitives。
 - **Web 适配层**：[样式与接入](adapters/web/README.md)；语义 HTML + CSS，可用于 React、Vue、Svelte 或混合容器。交互由宿主负责。
 - **安卓展示 App**：[Compose Catalog](examples/compose-catalog)；可操作的组件、流程与主题演示。包名独立，不接触现有 App 数据。
@@ -69,4 +69,4 @@ Web：仓库根目录 `npm ci`、`npx playwright install chromium`、`npm run te
 
 ## 使用原则
 
-先理解产品，再选页面配方；先复用官方控件，再定制视觉。界面换肤时保留原应用 ID、签名、数据库、备份和现有功能。源码私有；不附带 Apple 字体、SF Symbols 或用户数据。依赖许可见 [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md)。
+先理解产品，再选页面配方。视觉以苹果控件为基线，系统返回、键盘与权限保留安卓行为。界面换肤时保留原应用 ID、签名、数据库、备份和现有功能。源码私有；不附带 Apple 字体、SF Symbols 或用户数据。依赖许可见 [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md)。

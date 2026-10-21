@@ -20,6 +20,8 @@ enum class OrchardPalette(val key: String, val label: String) {
 }
 
 val LocalOrchardReducedMotion = staticCompositionLocalOf { false }
+data class OrchardControlColors(val toggleOn: Color, val toggleOff: Color, val segmentTrack: Color, val segmentThumb: Color, val buttonFill: Color = Color(0xFF0066DD), val buttonText: Color = Color.White)
+val LocalOrchardControlColors = staticCompositionLocalOf { OrchardControlColors(Color(0xFF34C759), Color(0xFFDCDCE0), Color(0xFFE5E5EA), Color.White) }
 
 @Composable
 fun rememberOrchardReducedMotion(): Boolean {
@@ -58,11 +60,11 @@ fun orchardColorScheme(palette: OrchardPalette, dark: Boolean): ColorScheme {
 }
 
 private val OrchardTypography = Typography(
-    headlineLarge = TextStyle(fontSize = OrchardTokens.type_largeTitle.sp, lineHeight = 41.sp, fontWeight = FontWeight.Bold),
+    headlineLarge = TextStyle(fontSize = OrchardTokens.type_largeTitle.sp, lineHeight = 41.sp, letterSpacing = (-.8).sp, fontWeight = FontWeight.Bold),
     headlineSmall = TextStyle(fontSize = OrchardTokens.type_title.sp, lineHeight = 30.sp, fontWeight = FontWeight.SemiBold),
     titleLarge = TextStyle(fontSize = OrchardTokens.type_title.sp, lineHeight = 30.sp, fontWeight = FontWeight.SemiBold),
     titleMedium = TextStyle(fontSize = OrchardTokens.type_body.sp, lineHeight = 24.sp, fontWeight = FontWeight.SemiBold),
-    bodyLarge = TextStyle(fontSize = OrchardTokens.type_body.sp, lineHeight = 26.sp),
+    bodyLarge = TextStyle(fontSize = OrchardTokens.type_body.sp, lineHeight = 22.sp, letterSpacing = (-.2).sp),
     bodyMedium = TextStyle(fontSize = OrchardTokens.type_label.sp, lineHeight = 23.sp),
     labelLarge = TextStyle(fontSize = OrchardTokens.type_label.sp, lineHeight = 22.sp, fontWeight = FontWeight.SemiBold),
     labelMedium = TextStyle(fontSize = OrchardTokens.type_caption.sp, lineHeight = 19.sp),
@@ -74,9 +76,13 @@ fun OrchardTheme(
     palette: OrchardPalette = OrchardPalette.Blue,
     dark: Boolean = isSystemInDarkTheme(),
     reducedMotion: Boolean = rememberOrchardReducedMotion(),
+    reducedTransparency: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    CompositionLocalProvider(LocalOrchardReducedMotion provides reducedMotion) {
+    val values = OrchardTokenData.schemes.getValue(palette.key).getValue(if (dark) "dark" else "light")
+    CompositionLocalProvider(LocalOrchardReducedMotion provides reducedMotion,
+        LocalOrchardReducedTransparency provides reducedTransparency,
+        LocalOrchardControlColors provides OrchardControlColors(Color(values.getValue("toggleOn")), Color(values.getValue("toggleOff")), Color(values.getValue("segmentTrack")), Color(values.getValue("segmentThumb")), Color(values.getValue("buttonFill")), Color(values.getValue("buttonText")))) {
         MaterialTheme(
             colorScheme = orchardColorScheme(palette, dark), typography = OrchardTypography,
             shapes = Shapes(

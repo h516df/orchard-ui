@@ -24,7 +24,7 @@ class TokenTests(unittest.TestCase):
         data = json.loads((ROOT / "tokens/orchard.json").read_text())
         pairs = [(fg, bg, 4.5) for fg in ("text", "textSecondary") for bg in ("background", "surface", "surfaceMuted")]
         pairs += [("primary", "background", 4.5), ("onPrimary", "primary", 4.5),
-                  ("onPrimaryContainer", "primaryContainer", 4.5), ("onDanger", "danger", 4.5),
+                  ("buttonText", "buttonFill", 4.5), ("onPrimaryContainer", "primaryContainer", 4.5), ("onDanger", "danger", 4.5),
                   ("onDangerContainer", "dangerContainer", 4.5), ("danger", "surface", 4.5),
                   ("outline", "surface", 3), ("outline", "background", 3)]
         for name, palette in data["palettes"].items():
