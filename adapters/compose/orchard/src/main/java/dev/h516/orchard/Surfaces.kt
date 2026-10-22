@@ -26,7 +26,7 @@ fun OrchardCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.
 
 @Composable
 fun OrchardGroup(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
-    Surface(modifier.fillMaxWidth(), shape = RoundedCornerShape(OrchardTokens.radius_card.dp), color = MaterialTheme.colorScheme.surface) {
+    Surface(modifier.fillMaxWidth(), shape = RoundedCornerShape(OrchardTokens.radius_group.dp), color = MaterialTheme.colorScheme.surface) {
         Column(content = content)
     }
 }
@@ -59,7 +59,7 @@ fun OrchardListRow(title: String, modifier: Modifier = Modifier, subtitle: Strin
     val large = LocalDensity.current.fontScale > 1.5f
     Row(
         modifier.fillMaxWidth().then(if (onClick != null) Modifier.clickable(interactionSource = orchardPressSource(), indication = null, role = Role.Button, onClick = onClick) else Modifier)
-            .padding(horizontal = 16.dp, vertical = 11.dp).heightIn(min = 30.dp),
+            .heightIn(min = OrchardTokens.size_row.dp).padding(horizontal = 16.dp, vertical = 9.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically,
     ) {
         leading?.invoke()

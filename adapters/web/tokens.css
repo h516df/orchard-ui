@@ -11,9 +11,15 @@
   --o-radius-card: 20px;
   --o-radius-sheet: 32px;
   --o-radius-pill: 999px;
+  --o-radius-group: 26px;
   --o-size-touch: 48px;
   --o-size-contentMax: 720px;
   --o-size-readingMax: 640px;
+  --o-size-row: 48px;
+  --o-size-navigationControl: 44px;
+  --o-size-segment: 32px;
+  --o-size-search: 44px;
+  --o-size-tab: 58px;
   --o-type-caption: 13px;
   --o-type-label: 15px;
   --o-type-body: 17px;

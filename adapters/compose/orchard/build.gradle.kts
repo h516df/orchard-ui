@@ -4,7 +4,7 @@ plugins {
     id("maven-publish")
 }
 group = "dev.h516.orchard"
-version = "0.2.0"
+version = "0.3.0"
 android {
     namespace = "dev.h516.orchard"
     compileSdk = 36

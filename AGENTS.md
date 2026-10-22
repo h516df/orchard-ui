@@ -25,6 +25,7 @@
 - 先读 README、CLOUD_DEVELOPMENT、HANDOFF 与 docs/VERIFICATION。仓库必须保持私有。
 - 用户要求跨项目 UI/UX 复用，不锁定 Kotlin/Compose；共享规范和 tokens 是核心，各框架适配按需选择。
 - tokens/orchard.json 为唯一设计变量源，改动后生成四个适配文件并检查同步、对比度。禁止手改生成文件。
+- 用户要求“要做到就是苹果官方App”。视觉先对照docs/APPLE_APP_REFERENCES的具体官方页面，默认展示完整页面再抽组件，不能以控件数量、通过测试或主观相似度代替视觉认可。
 - 用户明确拒绝0.1的Material外观。UI先遵守docs/APPLE_VISUALS：Flutter默认Cupertino；Compose/RN/Web按苹果形状实现，不能把默认Material控件或安卓原生Switch/Alert当成果。可复用平台交互基础设施与用户已有能力。各适配层覆盖范围如实维护 docs/COMPONENTS。不要把规范、候选库或 CSS 样式说成完整系统功能。
 - UI/UX 采用 docs/FOUNDATIONS、UX_PATTERNS 和 QUALITY。共享组件改动检查相关适配和合成画面；截图不证明真机/IME/系统栏/动画性能。
 - 本仓库只实现共享界面资源。没有新的项目授权时，不批量改写、合并或发布其他 App，不搬业务数据库、签名、凭据或私人内容。

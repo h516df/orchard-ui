@@ -1,6 +1,6 @@
 # 组件目录与覆盖范围
 
-v0.2 提供可独立选用的适配层。名称统一表达意图，API 按各框架习惯编写，不要求跨语言参数完全一致。所有数据、回调、持久化与导航上下文由宿主提供。
+v0.3 提供可独立选用的适配层。名称统一表达意图，API 按各框架习惯编写，不要求跨语言参数完全一致。所有数据、回调、持久化与导航上下文由宿主提供。
 
 图例：**代码**＝已实现；**样式**＝CSS/语义 HTML，行为由宿主实现；**宿主**＝应使用平台官方能力或项目实现。本表不把文档模式算成已实现的组件。
 
@@ -16,7 +16,7 @@ v0.2 提供可独立选用的适配层。名称统一表达意图，API 按各�
 | 分段选择/筛选 | `OrchardSegments` | 同名 | 同名 | radio fieldset 样式 |
 | 滑块 | `OrchardSlider` | 官方 Slider | 宿主库 | 原生 range |
 | 卡片 | `OrchardCard` | 同名 | 同名 | `.o-card` |
-| 分组与分区 | `OrchardGroup` / `OrchardSection` | `OrchardSection` | 同名 | `.o-group` / `.o-section` |
+| 分组与分区 | `OrchardGroup` / `OrchardSection` | `OrchardGroup` / `OrchardSection` | 同名 | `.o-group` / `.o-section` |
 | 列表行/长文字/次级值 | `OrchardListRow` | 同名 | 同名 | `.o-row` |
 | 分隔线 | `OrchardDivider` | 官方 Divider | `OrchardDivider` | `.o-divider` |
 | 大标题 | `OrchardLargeTitle` | 同名 | 同名 | `.o-large-title` |
@@ -35,6 +35,12 @@ v0.2 提供可独立选用的适配层。名称统一表达意图，API 按各�
 | 导入预览 | `OrchardImportReview` | 同名 | 宿主组合 | 宿主组合 |
 | 有限宽可选文字阅读 | `OrchardReadingSurface` | 同名 | 同名 | `.o-reading` |
 | 导航材质 | `OrchardGlassSurface`，API31+背景模糊 | 同名，BackdropFilter | 同名，默认实色/宿主renderBackdrop | backdrop-filter/不透明回退 |
+
+## App 页面模式（0.3）
+
+Compose、Flutter、RN均有 `OrchardAppPage`、`OrchardRoundButton`、`OrchardSearchDock`、`OrchardNoteRow`、`OrchardMiniPlayer`。Web对应 `.o-app`、`.o-round-button`、`.o-search-dock`、`.o-note-row`、`.o-mini-player` 与 `.o-media-dock`。新组件的状态和业务回调仍由宿主控制；RN图标接受宿主render/children，不要求安装统一图标框架。
+
+完整设置/备忘录/音乐演示在Compose和Web，Flutter/RN提供同类基础模式与笔记页接线示例。不能把四个适配层称为四套完整App。参考、尺寸与材质差异见 [原版对照](APPLE_APP_REFERENCES.md)。
 
 ## 核心约定
 

@@ -28,7 +28,7 @@ git submodule add https://github.com/h516df/orchard-ui.git vendor/orchard-ui
 ./gradlew :orchard:publishReleasePublicationToMavenLocal
 ```
 
-目标工程的 repositories 添加 `mavenLocal()`，模块依赖 `implementation("dev.h516.orchard:orchard:0.2.0")`。这是本地缓存，不是已上传 Maven Central 或 GitHub Packages；换机器需重建。
+目标工程的 repositories 添加 `mavenLocal()`，模块依赖 `implementation("dev.h516.orchard:orchard:0.3.0")`。这是本地缓存，不是已上传 Maven Central 或 GitHub Packages；换机器需重建。
 
 **选项 B：固定源码的 composite build**，适合版本相容的长期接入：
 
@@ -43,7 +43,7 @@ includeBuild("vendor/orchard-ui") {
 
 ```kotlin
 // app/build.gradle.kts
-dependencies { implementation("dev.h516.orchard:orchard:0.2.0") }
+dependencies { implementation("dev.h516.orchard:orchard:0.3.0") }
 
 // 界面入口，存储与回调继续用原项目实现
 OrchardTheme(palette = OrchardPalette.Sage) {
@@ -114,3 +114,10 @@ import {OrchardProvider, OrchardSection, OrchardSwitchRow} from '@h516df/orchard
 ## 避免后续到处改
 
 项目中保存一份短的 UI 简报和设计取舍。共享变化先改 tokens/公共适配层，版本升级由项目逐个评估；产品专属页面留在产品仓库。不要通过一个库的更新自动重写所有 App。
+
+
+## 采用完整 App 页面模式
+
+先看 [原版对照](APPLE_APP_REFERENCES.md)，再选择骨架与组件。Compose示例在 `ReferenceApp.kt`；Flutter [NotesReference](../adapters/flutter/example/notes_reference.dart)、RN [NotesReference](../adapters/react-native/example/NotesReference.tsx) 可作为宿主接线起点。Web [交互参考](../examples/web-reference/index.html) 使用共享CSS，未绑定React/Vue。
+
+`OrchardAppPage`自带滚动容器，不放在另一个竖向ScrollView内。底部搜索/播放器覆盖内容时保留相应的滚动底部空间；RN显式传宿主安全区insets和图标，Flutter/RN的路由/存储/播放器继续用原项目能力。Compose `OrchardDestination.selectedIcon` 可提供单独选中图标。新参考页面没有用户数据库迁移需求。

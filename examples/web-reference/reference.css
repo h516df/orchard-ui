@@ -1,0 +1,154 @@
+body {
+  margin: 0;
+}
+button,
+input,
+textarea {
+  -webkit-appearance: none;
+}
+button svg {
+  inline-size: 22px;
+  block-size: 22px;
+}
+.o-row {
+  cursor: pointer;
+}
+.o-row > .account-avatar {
+  flex: 0 0 58px;
+  inline-size: 58px;
+  block-size: 58px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: white;
+  background: #adadb4;
+  font-size: 29px;
+}
+.account-label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.account-label strong {
+  font-weight: 600;
+}
+.account-label small {
+  font-size: 0.8125rem;
+}
+.o-app[data-page="music"] {
+  background: var(--editor-background);
+}
+.o-app[data-page="music"] .o-app-content {
+  padding-block-end: 164px;
+}
+.o-app-header > :last-child {
+  margin-inline-start: auto;
+}
+.display-options {
+  display: flex;
+  gap: 28px;
+  padding: 20px 28px;
+}
+.display-options label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.display-options input {
+  appearance: none;
+  inline-size: 22px;
+  block-size: 22px;
+  margin: 0;
+  border: 1.5px solid var(--o-outline);
+  border-radius: 50%;
+}
+.display-options input:checked {
+  background: var(--o-primary);
+  border-color: var(--o-primary);
+  box-shadow: inset 0 0 0 5px var(--o-surface);
+}
+.display-device {
+  inline-size: 62px;
+  block-size: 126px;
+  padding: 12px 7px;
+  border-radius: 12px;
+  background: linear-gradient(150deg, #ff775c, #f8a2ba, #596bea);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  color: white;
+  font-size: 13px;
+}
+.display-device.dark {
+  background: linear-gradient(150deg, #231331, #4d2fa5, #1679c0);
+}
+.display-device i {
+  inline-size: 100%;
+  block-size: 17px;
+  border-radius: 3px;
+  background: #ffffff44;
+}
+.brightness {
+  inline-size: calc(100% - 32px);
+  min-block-size: 48px;
+  margin-inline: 16px;
+  accent-color: var(--o-primary);
+}
+.confirm-actions {
+  display: flex;
+  border-block-start: 0.5px solid var(--o-divider);
+}
+.confirm-actions button {
+  flex: 1;
+  border-radius: 0;
+}
+.confirm-actions button + button {
+  border-inline-start: 0.5px solid var(--o-divider);
+  color: var(--o-danger);
+}
+.o-sample-caption {
+  color: var(--o-textSecondary);
+  font-size: 0.8125rem;
+}
+:root {
+  --editor-background: #fff;
+}
+[data-orchard-mode="dark"] {
+  --editor-background: #000;
+}
+@media (max-width: 22rem) {
+  .display-options {
+    gap: 16px;
+    padding-inline: 20px;
+  }
+}
+
+.o-app-header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 15;
+}
+.o-app-header[data-scrolled="true"] {
+  background: color-mix(in srgb, var(--o-background) 96%, transparent);
+  backdrop-filter: blur(20px);
+}
+.o-header-middle {
+  position: absolute;
+  inset-inline: 72px;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  transition: opacity 150ms;
+}
+.o-app-header[data-scrolled="true"] .o-header-middle {
+  opacity: 1;
+}
+.o-row > .o-icon-tile {
+  flex: 0 0 30px;
+}

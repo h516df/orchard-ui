@@ -83,10 +83,10 @@ class OrchardUiTest {
         assertTrue(closed)
     }
 
-    @Test fun componentsLightRender() { compose.setContent { CatalogApp(initialDark = false) }; capture("components-light") }
-    @Test fun componentsDarkRender() { compose.setContent { CatalogApp(initialDark = true) }; capture("components-dark") }
+    @Test fun componentsLightRender() { compose.setContent { ComponentCatalogApp(initialDark = false) }; capture("components-light") }
+    @Test fun componentsDarkRender() { compose.setContent { ComponentCatalogApp(initialDark = true) }; capture("components-dark") }
     @Test fun groupedListCategoryAndSearchWork() {
-        compose.setContent { CatalogApp(initialDark = false) }
+        compose.setContent { ComponentCatalogApp(initialDark = false) }
         compose.onNodeWithText("列表").performClick()
         compose.onNodeWithText("跟随系统").assertExists()
         capture("grouped-lists-light")
@@ -107,14 +107,14 @@ class OrchardUiTest {
         assertFalse(open)
     }
     @Test fun reducedTransparencyRetainsNavigation() {
-        compose.setContent { CatalogApp(initialDark = false, initialTab = "appearance") }
+        compose.setContent { ComponentCatalogApp(initialDark = false, initialTab = "appearance") }
         compose.onNodeWithText("降低透明度").performScrollTo().performClick().assertIsOn()
         compose.onNodeWithText("浏览").performClick()
         compose.onNodeWithText("组件").assertExists()
         capture("components-opaque-glass-light")
     }
     @Test fun tabNavigationKeepsControlValues() {
-        compose.setContent { CatalogApp(initialDark = false) }
+        compose.setContent { ComponentCatalogApp(initialDark = false) }
         compose.onNodeWithContentDescription("名称").performTextReplacement("我的组件")
         compose.onNodeWithText("触感反馈").performClick().assertIsOff()
         compose.onNodeWithText("外观").performClick()
@@ -123,7 +123,7 @@ class OrchardUiTest {
         compose.onNodeWithText("触感反馈").assertIsOff()
     }
     @Test fun settingsChangePalette() {
-        compose.setContent { CatalogApp(initialDark = false) }
+        compose.setContent { ComponentCatalogApp(initialDark = false) }
         compose.onNodeWithText("外观").performClick()
         compose.onNodeWithText("纸感绿").performClick()
         compose.onNodeWithText("已选用").assertExists()
@@ -132,15 +132,98 @@ class OrchardUiTest {
     @Test @Config(qualifiers = "zh-rCN-w320dp-h1000dp-xhdpi")
     fun narrowLargeTextLight() {
         RuntimeEnvironment.setFontScale(2f)
-        compose.setContent { CatalogApp(initialDark = false) }
+        compose.setContent { ComponentCatalogApp(initialDark = false) }
         compose.onNodeWithText("组件").assertIsDisplayed()
         capture("components-320dp-font200-light")
     }
     @Test @Config(qualifiers = "zh-rCN-w320dp-h1000dp-night-xhdpi")
     fun narrowLargeTextDark() {
         RuntimeEnvironment.setFontScale(2f)
-        compose.setContent { CatalogApp(initialDark = true) }
+        compose.setContent { ComponentCatalogApp(initialDark = true) }
         compose.onNodeWithText("组件").assertIsDisplayed()
         capture("components-320dp-font200-dark")
+    }
+
+    @Test fun referenceSettingsSearchNavigationAndSwitch() {
+        compose.setContent { CatalogApp(initialDark = false) }
+        compose.onNodeWithText("飞行模式").assertIsOff().performClick().assertIsOn()
+        capture("settings-light")
+        compose.onNodeWithContentDescription("搜索").performTextReplacement("显示")
+        compose.onNodeWithText("飞行模式").assertDoesNotExist()
+        compose.onNodeWithText("显示与亮度").performClick()
+        compose.onNodeWithText("浅色").performClick().assertIsSelected()
+        capture("display-light")
+        compose.onNodeWithText("降低透明度").performScrollTo().performClick().assertIsOn()
+        compose.runOnIdle { compose.activity.onBackPressedDispatcher.onBackPressed() }
+        compose.onNodeWithText("设置").assertExists()
+    }
+    @Test fun referenceNotesCanEditSaveSearchAndGuardBack() {
+        compose.setContent { CatalogApp(initialDark = false, initialPage = "notes") }
+        capture("notes-light")
+        compose.onNodeWithText("周末的小计划").performClick()
+        compose.onNodeWithContentDescription("备忘录正文").performTextReplacement("修改后的正文")
+        capture("note-editor-light")
+        compose.runOnIdle { compose.activity.onBackPressedDispatcher.onBackPressed() }
+        compose.onNodeWithText("继续编辑").performClick()
+        compose.onNodeWithContentDescription("备忘录正文").assertTextContains("修改后的正文")
+        compose.onNodeWithContentDescription("完成").performClick()
+        compose.onNodeWithContentDescription("搜索").performTextReplacement("修改后的正文")
+        compose.onNodeWithText("周末的小计划").assertExists()
+        compose.onNodeWithText("灵感随记").assertDoesNotExist()
+        compose.onNodeWithContentDescription("新建备忘录").performClick()
+        compose.onNodeWithContentDescription("备忘录标题").performTextReplacement("新的一则")
+        compose.onNodeWithContentDescription("完成").performClick()
+        compose.onNodeWithContentDescription("清除搜索").performClick()
+        compose.onNodeWithText("新的一则").assertExists()
+    }
+    @Test fun referenceMusicControlsAndTabs() {
+        compose.setContent { CatalogApp(initialDark = false, initialPage = "music") }
+        capture("music-light")
+        compose.onNodeWithContentDescription("播放微风").performClick()
+        compose.onNodeWithContentDescription("暂停").assertExists().performClick()
+        compose.onAllNodesWithText("微风").assertCountEquals(2)
+        compose.onNodeWithContentDescription("下一首").performClick()
+        compose.onAllNodesWithText("慢一点").assertCountEquals(2)
+        compose.onNode(hasText("广播") and hasClickAction()).performClick().assertIsSelected()
+        compose.onNodeWithText("电台精选").assertExists()
+        compose.onNode(hasText("搜索") and hasClickAction()).performClick().assertIsSelected()
+        compose.onNodeWithContentDescription("音乐、艺人、专辑").performTextReplacement("沿途")
+        compose.onNodeWithContentDescription("播放微风").assertDoesNotExist()
+        compose.onNodeWithContentDescription("播放沿途").assertExists()
+    }
+    @Test fun referencePickerChangesPages() {
+        compose.setContent { CatalogApp(initialDark = false) }
+        compose.onNodeWithContentDescription("更多").performClick()
+        compose.onNodeWithText("备忘录", useUnmergedTree = true).performClick()
+        compose.onNodeWithContentDescription("新建备忘录").assertExists()
+    }
+    @Test fun referenceDarkPagesRender() {
+        compose.setContent { CatalogApp(initialDark = true, initialPage = "notes") }
+        capture("notes-dark")
+    }
+    @Test fun referenceMusicDarkRender() {
+        compose.setContent { CatalogApp(initialDark = true, initialPage = "music") }
+        capture("music-dark")
+    }
+    @Test fun referenceSettingsDarkRender() {
+        compose.setContent { CatalogApp(initialDark = true) }; capture("settings-dark")
+    }
+    @Test @Config(qualifiers = "zh-rCN-w320dp-h1000dp-xhdpi")
+    fun referenceNarrowLargeText() {
+        RuntimeEnvironment.setFontScale(2f)
+        compose.setContent { CatalogApp(initialDark = false) }
+        compose.onNodeWithText("飞行模式").performScrollTo().assertIsDisplayed()
+        capture("settings-320dp-font200")
+        compose.onNodeWithContentDescription("更多").performClick()
+        compose.onNodeWithText("备忘录", useUnmergedTree = true).performClick()
+        compose.onNodeWithContentDescription("新建备忘录").assertIsDisplayed()
+        capture("notes-320dp-font200")
+    }
+
+    @Test fun largeTitleCollapsesAboveScrolledContent() {
+        compose.setContent { CatalogApp(initialDark = false, initialPage = "notes") }
+        compose.onNodeWithText("雨停之后").performScrollTo()
+        compose.onNodeWithText("雨停之后").assertIsDisplayed()
+        capture("notes-scrolled-light")
     }
 }

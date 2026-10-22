@@ -78,12 +78,12 @@ fun OrchardButton(
 }
 
 @Composable
-fun OrchardIconButton(icon: ImageVector, label: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
+fun OrchardIconButton(icon: ImageVector, label: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true, tint: Color = MaterialTheme.colorScheme.primary) {
     val source = orchardPressSource()
     val pressed by source.collectIsPressedAsState()
     Box(modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp).alpha(if (!enabled) 0.4f else if (pressed) 0.5f else 1f)
         .clickable(source, indication = null, enabled = enabled, role = Role.Button, onClick = onClick), contentAlignment = Alignment.Center) {
-        Icon(icon, contentDescription = label, modifier = Modifier.size(22.dp), tint = MaterialTheme.colorScheme.primary)
+        Icon(icon, contentDescription = label, modifier = Modifier.size(22.dp), tint = tint)
     }
 }
 
@@ -125,7 +125,7 @@ fun OrchardTextField(
 @Composable
 fun OrchardSearchField(value: String, onValueChange: (String) -> Unit, modifier: Modifier = Modifier, label: String = "搜索") {
     val c = MaterialTheme.colorScheme
-    Row(modifier.fillMaxWidth().heightIn(min = 48.dp).clip(RoundedCornerShape(14.dp))
+    Row(modifier.fillMaxWidth().heightIn(min = OrchardTokens.size_search.dp).clip(RoundedCornerShape(14.dp))
         .background(c.onSurface.copy(alpha = 0.055f)).padding(start = 12.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         Icon(OrchardIcons.Search, null, tint = c.onSurfaceVariant, modifier = Modifier.size(19.dp))
@@ -137,7 +137,7 @@ fun OrchardSearchField(value: String, onValueChange: (String) -> Unit, modifier:
 }
 
 @Composable
-fun OrchardSwitchRow(title: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit, modifier: Modifier = Modifier, subtitle: String? = null, enabled: Boolean = true) {
+fun OrchardSwitchRow(title: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit, modifier: Modifier = Modifier, subtitle: String? = null, enabled: Boolean = true, leading: (@Composable () -> Unit)? = null) {
     val c = MaterialTheme.colorScheme
     val reduced = LocalOrchardReducedMotion.current
     val colors = LocalOrchardControlColors.current
@@ -145,8 +145,9 @@ fun OrchardSwitchRow(title: String, checked: Boolean, onCheckedChange: (Boolean)
     val offset by animateDpAsState(if (checked) 22.dp else 2.dp, spring(dampingRatio = 0.9f, stiffness = 550f), label = "switch-thumb")
     Row(modifier.fillMaxWidth().alpha(if (enabled) 1f else .4f)
         .toggleable(value = checked, interactionSource = orchardPressSource(), indication = null, enabled = enabled, role = Role.Switch, onValueChange = onCheckedChange)
-        .padding(horizontal = 16.dp, vertical = 10.dp).heightIn(min = 34.dp),
-        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+        .heightIn(min = OrchardTokens.size_row.dp).padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        leading?.invoke()
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
             Text(title, style = MaterialTheme.typography.bodyLarge, color = c.onSurface)
             subtitle?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = c.onSurfaceVariant) }
@@ -190,8 +191,8 @@ fun <T> OrchardSegments(options: List<T>, selected: T, onSelect: (T) -> Unit, la
         val cell = (maxWidth - 8.dp) / options.size
         val target = cell * options.indexOf(selected).coerceAtLeast(0)
         val offset by animateDpAsState(target, spring(dampingRatio = .86f, stiffness = 500f), label = "segmented-thumb")
-        Box(Modifier.fillMaxWidth().height(36.dp).clip(CircleShape).background(control.segmentTrack))
-        Box(Modifier.offset(x = 4.dp + if (reduced) target else offset).width(cell).height(30.dp)
+        Box(Modifier.fillMaxWidth().height(OrchardTokens.size_segment.dp).clip(CircleShape).background(control.segmentTrack))
+        Box(Modifier.offset(x = 4.dp + if (reduced) target else offset).width(cell).height(28.dp)
             .shadow(2.dp, CircleShape).background(control.segmentThumb, CircleShape))
         Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp)) {
             options.forEach { option ->

@@ -2,7 +2,7 @@
 
 **给 h516df 的跨项目 UI / UX 复用库。苹果风视觉，安卓友好的交互，不绑定技术栈。私有仓库。**
 
-**0.2 按苹果原生控件的外形与布局重做。** [查看新版实际预览](docs/previews/README.md) · [视觉基线与实现边界](docs/APPLE_VISUALS.md)
+**0.3 改为按苹果 App 的完整页面重做：设置、备忘录、音乐。** [查看新版实际预览](docs/previews/README.md) · [原版对照与实现范围](docs/APPLE_APP_REFERENCES.md)
 
 不是每个新项目重新调一遍圆角、列表和保存流程。把共同的视觉变量、组件与体验规则集中在这里，项目保留自己的产品性格和数据逻辑。
 
@@ -26,7 +26,8 @@
 - **Flutter 适配层**：[代码](adapters/flutter/lib)；主题和常用组件、设置页、草稿编辑、导入预览，默认使用 Cupertino 控件。
 - **React Native 适配层**：[代码](adapters/react-native/src)；主题 Provider、常用组件、弹层和草稿编辑，使用 React Native primitives。
 - **Web 适配层**：[样式与接入](adapters/web/README.md)；语义 HTML + CSS，可用于 React、Vue、Svelte 或混合容器。交互由宿主负责。
-- **安卓展示 App**：[Compose Catalog](examples/compose-catalog)；可操作的组件、流程与主题演示。包名独立，不接触现有 App 数据。
+- **框架无关交互参考**：[Web 三页示例](examples/web-reference)，也能构建离线单文件预览；无公开部署。
+- **安卓展示 App**：[Compose Catalog](examples/compose-catalog)；默认设置页，可切换备忘录列表/编辑、音乐资料库与组件目录。包名独立，不接触现有 App 数据。
 - **开发资料**：UX 状态规则、页面配方、选型边界、审查表、项目接入模板、来源与许可说明。
 
 各适配层的覆盖范围不同，详见[组件目录](docs/COMPONENTS.md)。这不是四个完整应用框架，也不包含业务数据库、文件解析、媒体引擎或更新下载器。

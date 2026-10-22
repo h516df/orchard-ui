@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.0",
   "spacing": {
     "xs": 4,
     "sm": 8,
@@ -13,12 +13,18 @@
     "control": 22,
     "card": 20,
     "sheet": 32,
-    "pill": 999
+    "pill": 999,
+    "group": 26
   },
   "size": {
     "touch": 48,
     "contentMax": 720,
-    "readingMax": 640
+    "readingMax": 640,
+    "row": 48,
+    "navigationControl": 44,
+    "segment": 32,
+    "search": 44,
+    "tab": 58
   },
   "type": {
     "caption": 13,
