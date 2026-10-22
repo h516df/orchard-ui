@@ -1,0 +1,26 @@
+{
+  "renderer": "Robolectric 4.17 / API35 / Native graphics / Roborazzi 1.76.0",
+  "source_commit": "01d586e5d45bc6c1333f6f317b722f0724fc8efc",
+  "note": "Later source commit changes Web only; native source tree is identical. Synthetic data; no device verification.",
+  "files": {
+    "appearance-sage-light.png": "2aa885ff1e37ed2956b905e2bc85ea80bee3761011061fba24c7e2ee79240d50",
+    "components-320dp-font200-dark.png": "cdcf9be614a05371080bcb42e0b58d51924ecbc91b20318b6d7ab4bf93cc4cd8",
+    "components-320dp-font200-light.png": "3f508561b1fdd8766a735617abaed57d90f4ec83c78f50c912aa51dd0c59e8f0",
+    "components-dark.png": "776c1cd7c9f27cc45b898501f3dee8d5db01db89fc4fb6d447cc6a4ee7cb878a",
+    "components-light.png": "c5ca009cb2622a38d17877a152088062d6150402b4ae786414d3bfeafd9b2a58",
+    "components-opaque-glass-light.png": "9c3276eed01da3b86049fe7f41c5bcf0325f7986e76b10db8ab7180144b28391",
+    "confirmation-light.png": "baff3dcf2902f379bc3c9113174f6f5f9d1a4ad34d0ae876a98a66bd122b681f",
+    "display-light.png": "22fdb897c5258a3d6144356bd298c1fdc9efc86229480bbc460d33560dae2bf7",
+    "grouped-lists-light.png": "13b2042d5836685fcc2a288105ab7097767784aff044bfe402f894d879fd208e",
+    "music-dark.png": "396fddf52f54f7e6834707a294dd7a6ac9e964e168908d70f91c32621ee1cfbc",
+    "music-light.png": "a200b2a199395262e5df194aa991f815222b4767102917299159107101082bc7",
+    "note-editor-light.png": "47782b2cf64f8e903722db148978177adf0b70aef319b2a6a370b55139bdbffe",
+    "notes-320dp-font200.png": "138991d9298b3b062a6a1b2bbb9ad6a29f29c4328665c3c3b80202b0991dfb48",
+    "notes-dark.png": "cce002000d9c0fbef99803b2efa469d810e6a477263d3bdafcb6c0932707f2fc",
+    "notes-light.png": "4456698f5de0050ade50930ee23d11dd04a68edfa7a9ebfaab9e3ffab8e430f1",
+    "notes-scrolled-light.png": "dfbc4be12e7c2823ac1c4b8ea4c7028441843187ed9691dd383bd652a86758eb",
+    "settings-320dp-font200.png": "6fd08c87cbc14dd8bf7afe329d5c39d6612074be163619b6a18e0c19f1ba9bc8",
+    "settings-dark.png": "ca2f1d19aa05aba5ec3521f1e12f6f94aa7191fb7a4064720be5618598f69727",
+    "settings-light.png": "b6098f3cfbc8d2473b6e77a69ffcfcfd8f94170e8bc5dc74bb567d6cbbbacec4"
+  }
+}

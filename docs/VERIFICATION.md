@@ -1,3 +1,27 @@
+# 验证记录 · 0.3 Apple App 页面
+
+日期：2026-10-22。基线为v0.2.0 `cc309ec68d0e6f07a8e78ca8add47a32c9d69ee7`；本批最终源码 `7fb0b80`。下表分别保留实际执行的来源提交；已用Git差异核对后续提交没有改变通过检查的相应平台源码。
+
+| 范围 | 命令 / 来源 | 结果 |
+| --- | --- | --- |
+| 共享变量 | `bash cloud/check.sh quick` / 最终源码+预览文档 | passed，3项，8主题对比度/尺寸、四层生成同步、文档链接 |
+| Android | `JAVA_HOME=/workspace/scratch/jdk21 PATH=/workspace/scratch/jdk21/bin:$PATH bash cloud/check.sh android` / `01d586e` | passed，release AAR、Catalog debug APK、22项Compose UI、两个模块lint；后续源码仅改变Web |
+| Flutter | `PATH=/workspace/scratch/flutter-sdk/bin:$PATH bash cloud/check.sh flutter` / `510ae61` | passed，analyze无问题、8项widget test；后续提交未改变Flutter源码 |
+| RN | `bash cloud/check.sh react-native` / `01d586e` | passed，tsc、7项renderer/unit test；后续未改变RN源码 |
+| Web | `CHROMIUM_PATH=/usr/bin/chromium bash cloud/check.sh web` / `7fb0b80` | passed，Chromium10项；包含原组件5项+三页搜索/编辑/确认/播放/主题字号/滚动导航5项 |
+
+合计50项测试通过。19张Compose宿主预览逐字节复制并用[manifest](previews/manifest.json)记录SHA256；包括三个参考页浅深色、二级设置、编辑、滚动导航、两张320dp/200%字样及原组件目录8张。图片均来自宿主实际输出；未把Apple官方素材冒充本库画面。
+
+单文件预览由 `python3 tools/build_reference.py` 生成。Chromium通过本地HTTP宿主实际打开三页、切换深色/页面，pageerror为0、外部请求为0。当前环境Chromium的file://导航被管理策略阻止，因此不声称已在此环境直接用文件协议验收；同一单文件在HTTP宿主的行为已验证。临时预览与产物不进入Git。
+
+本批发现并修复：Compose内容层内的玻璃不能采样自身记录层，否则Native Graphics递归绘制崩溃；现将采样限制在兄弟导航层，内容内回退实色。Web事件委托区分页面按钮与App根节点，防止开关点击导致整页重建；修正工具栏定位与唱片封面排版。失败已定位后按影响范围复验，最终结果以上表为准。
+
+动态行为已在运行的UI宿主/Chromium中检查：返回保护、导航过渡后操作、实际滚动触发紧凑标题、减少动态效果、播放器暂停保留歌曲名。没有测量物理设备动画帧率，也没有声称达到Apple原生的交互物理或Liquid Glass光学表现。
+
+未覆盖：实体安卓的IME、系统栏、预测性返回、TalkBack实读、低端性能；Flutter/RN原生APK与路由宿主；账户、无线设置、真实音频播放与业务落盘。Actions未运行；没有发布正式App或公开站点。视觉是否达到用户目标尚未获用户认可。来源与差异见[原版对照](APPLE_APP_REFERENCES.md)。
+
+---
+
 # 验证记录 · 0.2 Apple视觉修正
 
 日期：2026-10-21。基线为0.1主线`64721540a26c9521c5f108a7b6871d44cc68adb9`，本批已验证源码`e33d1d4c003d98b1968b6913609a62508599da1b`，通过[PR #2](https://github.com/h516df/orchard-ui/pull/2)合入main；后续回执只修改文档。用户未接受0.1的视觉，旧测试通过不能代表新的视觉被认可。
