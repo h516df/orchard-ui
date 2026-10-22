@@ -41,7 +41,7 @@ button svg {
 .o-app[data-page="music"] .o-app-content {
   padding-block-end: 164px;
 }
-.o-app-header > :last-child {
+.o-app-header > [data-action="menu"] {
   margin-inline-start: auto;
 }
 .display-options {

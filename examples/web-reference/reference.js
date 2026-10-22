@@ -19,6 +19,7 @@ const paths = {
   library: "M5 2h14v2H5zM3 6h18v2H3zM2 10h20v13H2z",
   play: "m6 3 15 9-15 9z",
   pause: "M5 3h5v18H5zM14 3h5v18h-5z",
+  airplane: "M12 1c2 0 2 2 2 3v5l9 6v3l-9-4v6l3 2v2l-5-2-5 2v-2l3-2v-6l-9 4v-3l9-6V4c0-1 0-3 2-3z",
   forward: "m2 4 11 8-11 8zM12 4l11 8-11 8z",
   check: "m5 12 5 5L19 7",
   trash: "M3 6h18M8 6V2h8v4M5 6l1 16h12l1-16M10 10v8m4-8v8",
@@ -31,6 +32,7 @@ const filled = new Set([
   "play",
   "pause",
   "forward",
+  "airplane",
 ]);
 const icon = (name) =>
   `<svg viewBox="0 0 24 24" aria-hidden="true" fill="${filled.has(name) ? "currentColor" : "none"}" stroke="${filled.has(name) ? "none" : "currentColor"}" stroke-width="${name === "more" ? 3.5 : 1.8}" stroke-linecap="round" stroke-linejoin="round"><path d="${paths[name] || paths.gear}"/></svg>`;
@@ -118,7 +120,7 @@ function settings() {
           "飞行模式",
           "airplane",
           state.airplane,
-          tile("forward", "#ff9500"),
+          tile("airplane", "#ff9500"),
         )
       : "",
     match("无线局域网")
