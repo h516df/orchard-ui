@@ -1,3 +1,28 @@
+# 验证记录 · 0.4 Liquid Glass与动态流程
+
+日期2026-10-22。主体源码已提交并推送为`2f0ecabef16ce6dae1802a7fda2086f298e8c924`；Flutter菜单Esc关闭/屏幕边界修复提交为`484acd2956e4e6066d32c8632eef904ce0ee1876`。后续菜单可读性修正为`15a7f8bf2c87550e2815c6b46e3a8df940f78fb2`，仅提高菜单表面的不透明度/模糊。两次后续提交都只改Flutter音乐宿主及对应测试，已用Git差异核对其他适配源码完全相同。最终预览/回执提交不改变运行时源码。
+
+| 范围 | 实际命令 / 来源 | 结果 |
+| --- | --- | --- |
+| 共享 | `bash cloud/check.sh quick` / 2f0ecab；回执完成后再检查链接与同步 | passed，3项：8主题对比度/尺寸、四层生成同步、文档链接 |
+| Android | JDK21 + `bash cloud/check.sh android` / 2f0ecab | passed，25项Compose UI、release AAR、debug APK、两个模块lint |
+| Maven复用 | `./gradlew :orchard:publishReleasePublicationToMavenLocal --max-workers=2` / 2f0ecab | passed，0.4.0 AAR/POM/sources；POM含Backdrop1.0.6运行依赖 |
+| Flutter适配 | Flutter3.41.5 + `bash cloud/check.sh flutter` / 2f0ecab | passed，适配层analyze/8项widget；音乐宿主当时2项widget |
+| Flutter菜单修复 | 宿主`flutter analyze && flutter test` / 484acd2 | passed，无analyze问题，宿主3项widget，包含菜单/子菜单待播/Esc/半屏播放器/320宽200%文字 |
+| Flutter构建 | 宿主`flutter build apk --debug && flutter build web --no-web-resources-cdn` / 15a7f8b | passed，Android独立演示APK与Web发布构建，菜单色调修正后analyze与浏览器目检；没有运行Android设备 |
+| React Native | `bash cloud/check.sh react-native` / 2f0ecab | passed，tsc、8项renderer测试；原生材质依赖明确mock，仅证明传参/回退与受控交互，不证明shader |
+| Web | `CHROMIUM_PATH=/usr/bin/chromium bash cloud/check.sh web` / 2f0ecab | passed，Chromium11项，包含连续着色、方向收起、Popover子菜单待播和双高度播放器 |
+
+合计**58项**：共享3 + Compose25 + Flutter适配8/宿主3 + RN8 + Web11。版本号已由aapt读回：两个独立Android演示包versionName0.4.0/versionCode4；没有覆盖其他App。Flutter APK为调试包，包含多ABI，不是生产签名发布。
+
+新增关键路径：Compose拖选取消不改选中、抬手提交；滚动收起/反向展开；专辑锚点子菜单加入实际待播状态，下一首消费队列；播放器从部分展开到展开。Flutter测试发现并修复半屏内容溢出，使用Sheet提供的滚动控制器；浏览器实操发现第三方菜单Esc无响应，补HardwareKeyboard handler并在dispose移除；菜单按8px边界自动定位。Web手柄拖动抬手后的click避免二次切换高度。
+
+实际浏览器运行另检查了Flutter浅/深色/外观菜单与Web滚动/菜单/弹层流程，截图与短录屏是本库自己运行的合成内容。单文件HTML通过本地HTTP打开，交互正常，pageerror=0、外部请求=0。环境的file协议管理限制仍在，未宣称通过file协议直接打开。截图、渲染器及来源见[预览manifest](previews/manifest.json)；构建产物的SHA256/字节数/源码来源见[产物清单](research/0.4.0-artifacts.json)。
+
+**未验证**：实体Android/iOS设备、Impeller光学表现、IME/系统栏/TalkBack、预测性返回、GPU/帧率/功耗；RN原生宿主构建/运行；Safari/Firefox。Flutter Web和Web参考的材质是近似，Compose Native Graphics宿主也不能替代手机GPU验收。尚无用户视觉认可；没有公开部署、触发收费Actions或改写其他项目。
+
+---
+
 # 验证记录 · 0.3 Apple App 页面
 
 日期：2026-10-22。基线为v0.2.0 `cc309ec68d0e6f07a8e78ca8add47a32c9d69ee7`；本批最终源码 `7fb0b80`，通过[PR #3](https://github.com/h516df/orchard-ui/pull/3)合入main（合并提交`7191cdf398c9d58fe71b169872b20a90a6e28db6`），后续仅补充预览/文档回执。下表分别保留实际执行的来源提交；已用Git差异核对后续提交没有改变通过检查的相应平台源码。

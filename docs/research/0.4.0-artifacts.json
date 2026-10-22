@@ -1,0 +1,56 @@
+{
+  "version": "0.4.0",
+  "repository": "https://github.com/h516df/orchard-ui",
+  "private": true,
+  "sources": {
+    "shared_compose_rn_web": "2f0ecabef16ce6dae1802a7fda2086f298e8c924",
+    "flutter_menu_fix": "484acd2956e4e6066d32c8632eef904ce0ee1876",
+    "flutter_legibility": "15a7f8bf2c87550e2815c6b46e3a8df940f78fb2"
+  },
+  "checks": {
+    "shared": 3,
+    "compose_ui": 25,
+    "flutter_adapter": 8,
+    "flutter_music_host": 3,
+    "react_native_renderer": 8,
+    "chromium": 11
+  },
+  "limitations": [
+    "No physical device/IME/TalkBack/interactive back/performance/Impeller validation",
+    "React Native native host not built",
+    "Web and Flutter Web use approximate material"
+  ],
+  "artifacts": {
+    "orchard-0.4.0-sources.jar": {
+      "sha256": "e334f4c4d6576208f4346fd48a853c71d0a56b1d60b3dec6b11a13ca678cf6a8",
+      "bytes": 22995,
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "orchard-0.4.0.pom": {
+      "sha256": "05b189ac6e7ae1fe686e053d247b132f1d19191f09628d565459432631a2cdc0",
+      "bytes": 2252,
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "orchard-compose-demo-0.4.0-debug.apk": {
+      "sha256": "60df6b3ee68284cb8773655be2638baf46698b171e21ab048c899569040c1b42",
+      "bytes": 12192218,
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "orchard-0.4.0.aar": {
+      "sha256": "770bbe8f8df38938c495413612f32c585d40718acf9289c2af453872dac7e4de",
+      "bytes": 238642,
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "orchard-reference.html": {
+      "sha256": "8cc4f33aa6b8f534223cf3f453907baf1d8dfec82dc57e2bf8f8ba2394c471aa",
+      "bytes": 62720,
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "orchard-flutter-demo-0.4.0-debug.apk": {
+      "sha256": "281f89664e495874f39809cb13cbbfcfdf3a8a8d05494ad947a1b88b7821ab73",
+      "bytes": 162893023,
+      "source_commit": "15a7f8bf2c87550e2815c6b46e3a8df940f78fb2"
+    }
+  },
+  "status": "passed"
+}

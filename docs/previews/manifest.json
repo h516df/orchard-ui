@@ -1,26 +1,210 @@
 {
-  "renderer": "Robolectric 4.17 / API35 / Native graphics / Roborazzi 1.76.0",
-  "source_commit": "01d586e5d45bc6c1333f6f317b722f0724fc8efc",
-  "note": "Later source commit changes Web only; native source tree is identical. Synthetic data; no device verification.",
+  "source_commit": "15a7f8bf2c87550e2815c6b46e3a8df940f78fb2",
+  "native_source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924",
+  "note": "Flutter-only followup; other runtime source trees identical. Synthetic content. No physical device verification.",
+  "renderers": {
+    "compose": "Robolectric4.17/API35 NativeGraphics/Roborazzi1.76.0;393x852dp except named large-type cases",
+    "flutter": "Flutter3.41.5 release Web/Chromium; standard approximate material;393x852",
+    "web": "Chromium393x852; CSS approximate material"
+  },
   "files": {
-    "appearance-sage-light.png": "2aa885ff1e37ed2956b905e2bc85ea80bee3761011061fba24c7e2ee79240d50",
-    "components-320dp-font200-dark.png": "cdcf9be614a05371080bcb42e0b58d51924ecbc91b20318b6d7ab4bf93cc4cd8",
-    "components-320dp-font200-light.png": "3f508561b1fdd8766a735617abaed57d90f4ec83c78f50c912aa51dd0c59e8f0",
-    "components-dark.png": "776c1cd7c9f27cc45b898501f3dee8d5db01db89fc4fb6d447cc6a4ee7cb878a",
-    "components-light.png": "c5ca009cb2622a38d17877a152088062d6150402b4ae786414d3bfeafd9b2a58",
-    "components-opaque-glass-light.png": "9c3276eed01da3b86049fe7f41c5bcf0325f7986e76b10db8ab7180144b28391",
-    "confirmation-light.png": "baff3dcf2902f379bc3c9113174f6f5f9d1a4ad34d0ae876a98a66bd122b681f",
-    "display-light.png": "22fdb897c5258a3d6144356bd298c1fdc9efc86229480bbc460d33560dae2bf7",
-    "grouped-lists-light.png": "13b2042d5836685fcc2a288105ab7097767784aff044bfe402f894d879fd208e",
-    "music-dark.png": "396fddf52f54f7e6834707a294dd7a6ac9e964e168908d70f91c32621ee1cfbc",
-    "music-light.png": "a200b2a199395262e5df194aa991f815222b4767102917299159107101082bc7",
-    "note-editor-light.png": "47782b2cf64f8e903722db148978177adf0b70aef319b2a6a370b55139bdbffe",
-    "notes-320dp-font200.png": "138991d9298b3b062a6a1b2bbb9ad6a29f29c4328665c3c3b80202b0991dfb48",
-    "notes-dark.png": "cce002000d9c0fbef99803b2efa469d810e6a477263d3bdafcb6c0932707f2fc",
-    "notes-light.png": "4456698f5de0050ade50930ee23d11dd04a68edfa7a9ebfaab9e3ffab8e430f1",
-    "notes-scrolled-light.png": "dfbc4be12e7c2823ac1c4b8ea4c7028441843187ed9691dd383bd652a86758eb",
-    "settings-320dp-font200.png": "6fd08c87cbc14dd8bf7afe329d5c39d6612074be163619b6a18e0c19f1ba9bc8",
-    "settings-dark.png": "ca2f1d19aa05aba5ec3521f1e12f6f94aa7191fb7a4064720be5618598f69727",
-    "settings-light.png": "b6098f3cfbc8d2473b6e77a69ffcfcfd8f94170e8bc5dc74bb567d6cbbbacec4"
+    "appearance-sage-light.png": {
+      "sha256": "a7f19ad00a83f456d8a187fe7398acd08be3267668f72601b2b17b9bdb1a7585",
+      "bytes": 99722,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "components-320dp-font200-dark.png": {
+      "sha256": "cd4b02040af164dd5fbb53c4b68459034beb1925eb121f7faf714b1d7b7bdcee",
+      "bytes": 91305,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "components-320dp-font200-light.png": {
+      "sha256": "b193b89f8e1b1f09fd3d43da39c88ee48450596337151557aee20ab6cbfec14a",
+      "bytes": 87097,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "components-dark.png": {
+      "sha256": "08aa3a4ee8770ed5ce8a05890858f5ac5e9c54e3f5bafde25d6efb4cbf7e7b1a",
+      "bytes": 110728,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "components-light.png": {
+      "sha256": "11b132f960567673a65f5015dcbe26565c5bc0e162c70a6c1216547742306f70",
+      "bytes": 112679,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "components-opaque-glass-light.png": {
+      "sha256": "759aa939538dd353667feead598458c4986f994c5b5a066beb55ae18fc33ef0d",
+      "bytes": 93033,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "confirmation-light.png": {
+      "sha256": "baff3dcf2902f379bc3c9113174f6f5f9d1a4ad34d0ae876a98a66bd122b681f",
+      "bytes": 30925,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "display-light.png": {
+      "sha256": "b71c2a044ea55f6597f66daeed649f17f32c69e4749776fda8a835e835ab875d",
+      "bytes": 123344,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "flutter-liquid-appearance-dark.png": {
+      "sha256": "84f0075c335245c8cb46ca4f31749f69975fce0236c73b0b9c8dd3b84ce3bf82",
+      "bytes": 35796,
+      "renderer": "flutter",
+      "source_commit": "15a7f8bf2c87550e2815c6b46e3a8df940f78fb2"
+    },
+    "flutter-liquid-dark.png": {
+      "sha256": "dc1c6b853edf3d29e5fc6239a6d5f43a7effbef6f3073640fb5daf560e1ef057",
+      "bytes": 75347,
+      "renderer": "flutter",
+      "source_commit": "15a7f8bf2c87550e2815c6b46e3a8df940f78fb2"
+    },
+    "flutter-liquid-interactions.webm": {
+      "sha256": "37bc7abcaec14d4392b7c01e2fad1b9684bb24cfa2db200483228d0ba19ad5fd",
+      "bytes": 456504,
+      "renderer": "flutter",
+      "source_commit": "15a7f8bf2c87550e2815c6b46e3a8df940f78fb2"
+    },
+    "flutter-liquid-light.png": {
+      "sha256": "818a70eb305b7a49e975774dabeebe46429d4a57111141f3977c72650662071b",
+      "bytes": 77217,
+      "renderer": "flutter",
+      "source_commit": "15a7f8bf2c87550e2815c6b46e3a8df940f78fb2"
+    },
+    "flutter-liquid-menu.png": {
+      "sha256": "e76c398cb1c0dc2db261b3558bb821fe99351663309b26f3815c45e359205c81",
+      "bytes": 77297,
+      "renderer": "flutter",
+      "source_commit": "15a7f8bf2c87550e2815c6b46e3a8df940f78fb2"
+    },
+    "grouped-lists-light.png": {
+      "sha256": "3bee6fa31e13cf4cdbf773b08ef9b066c29e484214e606db5e87ce9adb499bbc",
+      "bytes": 85599,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "music-dark.png": {
+      "sha256": "a4a5919a9394ca212619e54aac598eccfb2bb989fd1754d7d78f0f1928bf2686",
+      "bytes": 234205,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "music-dock-collapsed-light.png": {
+      "sha256": "75e6bd08fc95421fb49157b46fbc041a3c212e701cd6f83e34685a9b27bd8dd7",
+      "bytes": 246182,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "music-light.png": {
+      "sha256": "50205932e4140d6a18d8ead0458545fe7c1f0e6ee761259b40246fc7307e2678",
+      "bytes": 225085,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "music-menu-light.png": {
+      "sha256": "6e9f6d76d96165b54148d638c1963f21ab31d3702dbcb64e9f27f5d81ea2eb78",
+      "bytes": 200011,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "music-player-expanded-light.png": {
+      "sha256": "cde7596ffa9ad97bc0d45e9e992326a748034cc122dfd3ebc4917657b93d5eb3",
+      "bytes": 187470,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "music-player-medium-light.png": {
+      "sha256": "83fbedab23e89b43b2070881ff7efe7285d32e23b1f52cb44d52556230279110",
+      "bytes": 169807,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "music-submenu-light.png": {
+      "sha256": "53f412dc85ae4817e3ea5e29bddbc95d9d2579ccc9ccaa227defdf2cbfe722c9",
+      "bytes": 218679,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "note-editor-light.png": {
+      "sha256": "117f0c7485b2398893776fc5df85d1fea2144698c2faa972a78080a9b389cd46",
+      "bytes": 27769,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "notes-320dp-font200.png": {
+      "sha256": "db677c89c9b121b29b8362b5fc3c280bef11ffa5f8ea9d651a30167e982b99c7",
+      "bytes": 111159,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "notes-dark.png": {
+      "sha256": "ca7d0b6e270787de2915ef2ce22b29edfefc2fa0fad41e75e99f388fa8ade071",
+      "bytes": 124904,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "notes-light.png": {
+      "sha256": "900b0e034ebadda03cfd3b2867ffcd6f54372e50147d4406572965b0fadb9311",
+      "bytes": 119735,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "notes-scrolled-light.png": {
+      "sha256": "51bc30638837801e93d4e815e9c804e5d93c875278bf0d0c2860b4528ceb58fa",
+      "bytes": 113118,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "settings-320dp-font200.png": {
+      "sha256": "2c6fec41b685c9aada7d706c5c58be6518d52764addb865ff3ef3bfa49d59ad3",
+      "bytes": 101274,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "settings-dark.png": {
+      "sha256": "2ae3ec966bb777e7a2bee50f317afd349d5a5b39b497cf16d7ecc660a11b1613",
+      "bytes": 88551,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "settings-light.png": {
+      "sha256": "00c81cb8af12b0273818ddcef815be9e6856212d0731f8eee57e2467b27e897b",
+      "bytes": 85422,
+      "renderer": "compose",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "web-liquid-interactions.webm": {
+      "sha256": "3501141a961a330359a60e2ca609595292a92111a88949e582d29699642d131e",
+      "bytes": 268063,
+      "renderer": "web",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "web-liquid-menu.png": {
+      "sha256": "2c6814e839de4d9a4b5996769011530bf57c2a02f272cd89d88c9f231f5d31d0",
+      "bytes": 91562,
+      "renderer": "web",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "web-liquid-player.png": {
+      "sha256": "20a2310483259b6ec118a86c980833a081ab054a1f859f8d15f2fb56c79720fc",
+      "bytes": 47063,
+      "renderer": "web",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    },
+    "web-liquid-scrolled.png": {
+      "sha256": "1fba2baece017e553141bbb10aa82a3db445e770022c956eeeb33170e3e49477",
+      "bytes": 94012,
+      "renderer": "web",
+      "source_commit": "2f0ecabef16ce6dae1802a7fda2086f298e8c924"
+    }
   }
 }
