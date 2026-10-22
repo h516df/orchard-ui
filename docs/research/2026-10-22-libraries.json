@@ -1,0 +1,116 @@
+{
+  "checked_on": "2026-10-22",
+  "baseline": {
+    "ios_stable": "27.0.1",
+    "released_on": "2026-09-28",
+    "source": "https://support.apple.com/en-us/100100"
+  },
+  "scope": "Research and static source inspection only; no third-party runtime installation or device validation.",
+  "repositories": [
+    {
+      "repo": "Kyant0/AndroidLiquidGlass",
+      "url": "https://github.com/Kyant0/AndroidLiquidGlass",
+      "archived": false,
+      "pushed_at": "2026-08-26T04:00:51Z",
+      "license": "Apache-2.0",
+      "default_branch": "kmp",
+      "commit": "65ab177e90e5c1d8c62e70cf7755841982da65f6",
+      "release": {
+        "tag_name": "2.0.1",
+        "published_at": "2026-08-26T04:00:52Z",
+        "prerelease": false
+      }
+    },
+    {
+      "repo": "sdegenaar/liquid_glass_widgets",
+      "url": "https://github.com/sdegenaar/liquid_glass_widgets",
+      "archived": false,
+      "pushed_at": "2026-10-22T04:40:38Z",
+      "license": "MIT",
+      "default_branch": "main",
+      "commit": "244d666473a1bf156d4bbfadac4f4b22827ae167",
+      "release": {
+        "tag_name": null,
+        "published_at": null,
+        "prerelease": null
+      }
+    },
+    {
+      "repo": "QWEA0/Liquid-Glass-Android",
+      "url": "https://github.com/QWEA0/Liquid-Glass-Android",
+      "archived": false,
+      "pushed_at": "2026-09-29T10:25:18Z",
+      "license": "MIT",
+      "default_branch": "main",
+      "commit": "16afe4d8b5d08a370d3f8c50b08d7f5c6eb5da4d",
+      "release": {
+        "tag_name": "v2.0.11",
+        "published_at": "2026-09-21T06:28:15Z",
+        "prerelease": false
+      }
+    },
+    {
+      "repo": "sbaiahmed1/react-native-blur",
+      "commit": "d04f8ff2221c2642c754f9dde8eea55cded4ad37",
+      "pushed_at": "2026-10-21T16:31:48Z",
+      "archived": false,
+      "license": "MIT",
+      "release": {
+        "tag_name": "v6.0.2",
+        "published_at": "2026-09-20T21:42:32Z",
+        "prerelease": false
+      }
+    },
+    {
+      "repo": "callstack/liquid-glass",
+      "url": "https://github.com/callstack/liquid-glass",
+      "archived": false,
+      "pushed_at": "2026-09-15T20:03:57Z",
+      "license": "MIT",
+      "default_branch": "main",
+      "commit": "b7fd5abbabcd1dc5233d35c97c3f51bcb407d015",
+      "release": {
+        "tag_name": "v0.8.2",
+        "published_at": "2026-09-15T20:03:57Z",
+        "prerelease": false
+      }
+    },
+    {
+      "repo": "rdev/liquid-glass-react",
+      "url": "https://github.com/rdev/liquid-glass-react",
+      "archived": false,
+      "pushed_at": "2025-06-13T08:29:06Z",
+      "license": "MIT",
+      "default_branch": "master",
+      "commit": "ac48eab18d1f7f444ae30002d240cae29c863a21",
+      "release": {
+        "tag_name": null,
+        "published_at": null,
+        "prerelease": null
+      }
+    },
+    {
+      "repo": "alexzhirkevich/compose-cupertino",
+      "commit": "f66875aa6f3848b30c38e42a89fc99c9ac24a585",
+      "pushed_at": "2025-10-05T13:47:00Z",
+      "archived": false,
+      "license": "Apache-2.0",
+      "release": {
+        "tag_name": "0.1.0-alpha04",
+        "published_at": "2024-04-07T21:45:26Z",
+        "prerelease": false
+      }
+    }
+  ],
+  "package_registries": {
+    "liquid_glass_widgets": {
+      "version": "1.14.0",
+      "published_on": "2026-10-20",
+      "url": "https://pub.dev/packages/liquid_glass_widgets/versions/1.14.0"
+    },
+    "backdrop": {
+      "version": "2.0.1",
+      "url": "https://repo.maven.apache.org/maven2/io/github/kyant0/backdrop/maven-metadata.xml"
+    }
+  }
+}
