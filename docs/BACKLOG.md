@@ -62,3 +62,5 @@
 本批：接入兼容的Compose/Flutter/RN材质后端；连续玻璃着色；滚动收起导航、可拖动选择、锚点分层菜单与半屏弹层；在音乐完整流程验证并同步Web参考。保留API/渲染器回退、降低透明度和减少动态效果。
 
 完成条件：关键路径实际运行、库构建及跨适配检查通过；给出新版完整页面与动效证据；第三方版本/许可和宿主限制可追溯；私有GitHub保存可接续版本。状态：实现与58项检查已完成，经[PR #5](https://github.com/h516df/orchard-ui/pull/5)合入私有main，版本[v0.4.0](https://github.com/h516df/orchard-ui/releases/tag/v0.4.0)；截图、录屏与产物归属已保存。范围、各适配差异及证据见[材质说明](LIQUID_GLASS.md)与[验证记录](VERIFICATION.md)。用户视觉认可/真机验收仍未取得；未迁移其他App或公开部署。
+
+本批单列交付限制：GitHub Release附件上传到uploads.github.com返回HTTP401；代码、文档、预览与录屏已保存，产物已本地构建并记录校验值。未要求用户重新授权仓库写入，也未改用公开存储。

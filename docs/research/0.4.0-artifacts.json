@@ -56,6 +56,7 @@
   "delivery": {
     "pull_request": "https://github.com/h516df/orchard-ui/pull/5",
     "merge_commit": "c3431e1073d5cac057530ba742b1e9b39c887b01",
-    "release": "https://github.com/h516df/orchard-ui/releases/tag/v0.4.0"
+    "release": "https://github.com/h516df/orchard-ui/releases/tag/v0.4.0",
+    "release_assets_status": "blocked: uploads.github.com HTTP401; no release assets uploaded"
   }
 }
