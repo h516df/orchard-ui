@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun CatalogApp(initialDark: Boolean? = null, initialTab: String = "components") {
+fun ComponentCatalogApp(initialDark: Boolean? = null, initialTab: String = "components", onExit: (() -> Unit)? = null) {
     var paletteKey by rememberSaveable { mutableStateOf("blue") }
     var mode by rememberSaveable { mutableStateOf("跟随系统") }
     var reduce by rememberSaveable { mutableStateOf(false) }
@@ -96,7 +96,7 @@ fun CatalogApp(initialDark: Boolean? = null, initialTab: String = "components") 
                 // Padding belongs inside each scroll view, so content can scroll behind the glass bar.
                 Box(Modifier.padding(top = padding.calculateTopPadding()).fillMaxSize()) {
                     tabs.SaveableStateProvider(tab) { when (tab) {
-                        "components" -> ComponentsPage(padding.calculateBottomPadding(), { sheet = true }, { dialog = true }, notify) {
+                        "components" -> ComponentsPage(padding.calculateBottomPadding(), onExit, { sheet = true }, { dialog = true }, notify) {
                             mode = if (dark) "浅色" else "深色"
                         }
                         "patterns" -> PatternsPage(padding.calculateBottomPadding(),
@@ -124,7 +124,7 @@ private fun CatalogPage(bottomPadding: Dp, content: @Composable ColumnScope.() -
 }
 
 @Composable
-private fun ComponentsPage(bottomPadding: Dp, onSheet: () -> Unit, onDialog: () -> Unit, notify: (String) -> Unit, onToggleMode: () -> Unit) {
+private fun ComponentsPage(bottomPadding: Dp, onExit: (() -> Unit)?, onSheet: () -> Unit, onDialog: () -> Unit, notify: (String) -> Unit, onToggleMode: () -> Unit) {
     var name by rememberSaveable { mutableStateOf("果园 UI") }
     var query by rememberSaveable { mutableStateOf("") }
     var haptics by rememberSaveable { mutableStateOf(true) }
@@ -137,6 +137,7 @@ private fun ComponentsPage(bottomPadding: Dp, onSheet: () -> Unit, onDialog: () 
     CatalogPage(bottomPadding) {
         Column {
             Row(Modifier.fillMaxWidth().heightIn(min = 36.dp), verticalAlignment = Alignment.CenterVertically) {
+                if (onExit != null) OrchardIconButton(OrchardIcons.Back, "返回参考页面", onExit)
                 Text("ORCHARD", style = MaterialTheme.typography.labelMedium.copy(letterSpacing = 1.7.sp, fontSize = 11.sp), color = c.onSurfaceVariant, modifier = Modifier.weight(1f))
                 OrchardIconButton(OrchardIcons.Moon, "切换明暗", onToggleMode, Modifier.size(36.dp))
             }

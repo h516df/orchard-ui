@@ -218,9 +218,15 @@ object OrchardTokens {
     const val radius_card = 20
     const val radius_sheet = 32
     const val radius_pill = 999
+    const val radius_group = 26
     const val size_touch = 48
     const val size_contentMax = 720
     const val size_readingMax = 640
+    const val size_row = 48
+    const val size_navigationControl = 44
+    const val size_segment = 32
+    const val size_search = 44
+    const val size_tab = 58
     const val type_caption = 13
     const val type_label = 15
     const val type_body = 17

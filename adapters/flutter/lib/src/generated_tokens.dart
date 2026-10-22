@@ -214,9 +214,15 @@ abstract final class OrchardTokens {
   static const double radiusCard = 20;
   static const double radiusSheet = 32;
   static const double radiusPill = 999;
+  static const double radiusGroup = 26;
   static const double sizeTouch = 48;
   static const double sizeContentMax = 720;
   static const double sizeReadingMax = 640;
+  static const double sizeRow = 48;
+  static const double sizeNavigationControl = 44;
+  static const double sizeSegment = 32;
+  static const double sizeSearch = 44;
+  static const double sizeTab = 58;
   static const double typeCaption = 13;
   static const double typeLabel = 15;
   static const double typeBody = 17;

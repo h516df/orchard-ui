@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN" data-orchard-palette="blue" data-orchard-mode="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Orchard · App 参考</title>
+    <link rel="stylesheet" href="../../adapters/web/orchard.css" />
+    <link rel="stylesheet" href="./reference.css" />
+  </head>
+  <body class="orchard">
+    <div id="app" class="o-app"></div>
+    <dialog
+      id="pages"
+      class="o-dialog o-reference-menu"
+      aria-labelledby="pages-title"
+    >
+      <h2 id="pages-title" class="o-title">参考页面</h2>
+      <button class="o-row" data-page="settings">设置</button
+      ><button class="o-row" data-page="notes">备忘录</button
+      ><button class="o-row" data-page="music">音乐</button
+      ><label class="o-row"
+        ><span>深色外观</span
+        ><input
+          type="checkbox"
+          role="switch"
+          class="o-switch"
+          id="dark" /></label
+      ><label class="o-row"
+        ><span>降低透明度</span
+        ><input type="checkbox" role="switch" class="o-switch" id="opaque"
+      /></label>
+      <form method="dialog">
+        <button class="o-button o-button--plain">完成</button>
+      </form>
+    </dialog>
+    <dialog id="confirm" class="o-dialog" aria-labelledby="confirm-title">
+      <h2 class="o-title" id="confirm-title">放弃修改？</h2>
+      <p>本次修改尚未保存。</p>
+      <div class="confirm-actions">
+        <button class="o-button o-button--plain" id="keep">继续编辑</button
+        ><button class="o-button o-button--plain" id="discard">放弃修改</button>
+      </div>
+    </dialog>
+    <dialog
+      id="detail"
+      class="o-dialog o-reference-menu"
+      aria-labelledby="detail-title"
+    >
+      <h2 class="o-title" id="detail-title"></h2>
+      <div id="detail-body"></div>
+      <form method="dialog">
+        <button class="o-button o-button--plain">完成</button>
+      </form>
+    </dialog>
+    <script type="module" src="./reference.js"></script>
+  </body>
+</html>

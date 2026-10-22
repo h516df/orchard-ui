@@ -238,4 +238,101 @@ void main() {
       }
     },
   );
+
+  testWidgets(
+    'app page search, notes and media callbacks are controlled by host',
+    (tester) async {
+      final query = TextEditingController();
+      addTearDown(query.dispose);
+      var opened = 0;
+      var created = 0;
+      var played = 0;
+      var skipped = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: orchardThemeData(),
+          home: OrchardAppPage(
+            title: '备忘录',
+            subtitle: '1 则备忘录',
+            onMore: () {},
+            bottomBar: OrchardSearchDock(
+              controller: query,
+              onCompose: () => created++,
+            ),
+            children: [
+              OrchardGroup(
+                child: OrchardNoteRow(
+                  title: '周末的小计划',
+                  preview: '去河边散步',
+                  time: '09:41',
+                  onTap: () => opened++,
+                ),
+              ),
+              OrchardMiniPlayer(
+                title: '微风',
+                playing: false,
+                onPlayPause: () => played++,
+                onNext: () => skipped++,
+              ),
+            ],
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('周末的小计划'));
+      await tester.enterText(find.byType(CupertinoSearchTextField), '散步');
+      await tester.tap(find.bySemanticsLabel('新建备忘录'));
+      await tester.tap(find.bySemanticsLabel('播放'));
+      await tester.tap(find.bySemanticsLabel('下一首'));
+      expect(query.text, '散步');
+      expect([opened, created, played, skipped], [1, 1, 1, 1]);
+      expect(tester.takeException(), isNull);
+    },
+  );
+  testWidgets('app patterns support 320 wide and 200 percent text', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(320, 1000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final query = TextEditingController();
+    addTearDown(query.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: orchardThemeData(brightness: Brightness.dark),
+        home: MediaQuery(
+          data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+          child: OrchardAppPage(
+            title: '备忘录',
+            onMore: () {},
+            bottomBar: OrchardSearchDock(
+              controller: query,
+              onCompose: () {},
+              reducedTransparency: true,
+            ),
+            children: [
+              OrchardGroup(
+                child: OrchardNoteRow(
+                  title: '一条很长的备忘录标题',
+                  preview: '更多内容自然截断，完整内容由宿主打开',
+                  time: '09:41',
+                  onTap: () {},
+                ),
+              ),
+              OrchardMiniPlayer(
+                title: '一首很长的演示歌曲名称',
+                playing: true,
+                onPlayPause: () {},
+                onNext: () {},
+                reducedTransparency: true,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+  });
 }

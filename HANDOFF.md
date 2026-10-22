@@ -1,3 +1,19 @@
+# 当前交接 · Orchard UI 0.3 Apple App 页面
+
+日期：2026-10-22。用户要求“改呀，要做到就是苹果官方App”。按[具体原版来源](docs/APPLE_APP_REFERENCES.md)重做完整页面，需求见docs/BACKLOG的OUI-003；不要把已保存/测试通过写成用户已接受或100%等同苹果。
+
+- 基线v0.2.0 `cc309ec68d0e6f07a8e78ca8add47a32c9d69ee7`，分支 `feat/apple-app-reference`，最终源码 `7fb0b80`。只改本库，私有权限不变。
+- 默认CatalogApp改为设置，更多菜单切换备忘录、音乐和旧组件目录；旧入口重命名ComponentCatalogApp。新增笔记新建/编辑/保存/删除/返回保护，设置搜索和显示与亮度，音乐资料库/四项导航/迷你播放器的受控演示。无真实账户、系统无线设置、音频引擎或数据库。
+- 四适配层共享group26、row48、navigation44、segment32、search44、tab58等变量。Compose/Flutter/RN新增AppPage、RoundButton、SearchDock、NoteRow、MiniPlayer；Flutter/RN提供笔记页接线示例。完整三页交互宿主在Compose/Web，不能声称Flutter/RN也有三个完整App。
+- Glass修复内容图层自采样；Compose内容内回退实色，兄弟导航层API31+背景模糊。RN默认实色/宿主renderBackdrop；不捆绑SF Pro/SF Symbols，不声称完整Liquid Glass。
+- 检查passed：共享3、Compose22、Flutter8、RN7、Web10，共50项；release AAR/debug APK/lint、Flutter analyze、RN tsc。每项实际来源和命令见docs/VERIFICATION；跨提交相应平台源码无差异。19张原生渲染及manifest已保存，全部与输出核对。
+- 单文件预览：`python3 tools/build_reference.py` → `.cloud/preview/orchard-reference.html`；通过Chromium本地HTTP三页/菜单/深色检查，0外部请求/0页面错误。临时文件不入Git；file://当前被环境策略拦截，不冒充已跑。
+- 仍待：用户视觉认可、实体设备IME/系统栏/手势/TalkBack/性能与帧率、Flutter/RN原生宿主。没有运行Actions、改写其他App或公开部署。
+- 本轮APK SHA256：`9eb8d9ce486074c3d9a988e31e6c0b99497039d1080dd45e622c07b438ca54c6`；release AAR：`14537631c0edd03fd1aa66f5dcf3adfc00ce9c270a69e992ff405b40b0af41fa`，均对应已验证Android源码01d586e。
+- 当前准备保存预览/验证回执并提交PR；最终远端合并/标签状态以交付回执为准。
+
+---
+
 # 当前交接 · Orchard UI 0.2 Apple视觉修正
 
 日期：2026-10-21。当前目标与长期视觉规则见docs/APPLE_VISUALS.md；需求状态见docs/BACKLOG.md。

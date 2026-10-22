@@ -50,22 +50,22 @@ fun OrchardTopBar(title: String, onBack: (() -> Unit)? = null, actions: @Composa
     }
 }
 
-data class OrchardDestination(val key: String, val label: String, val icon: ImageVector)
+data class OrchardDestination(val key: String, val label: String, val icon: ImageVector, val selectedIcon: ImageVector = icon)
 
 @Composable
 fun OrchardTabBar(destinations: List<OrchardDestination>, selected: String, onSelect: (String) -> Unit) {
     val c = MaterialTheme.colorScheme
-    OrchardGlassSurface(Modifier.fillMaxWidth().padding(horizontal = 20.dp).padding(bottom = 10.dp).navigationBarsPadding()) {
-        Row(Modifier.fillMaxWidth().padding(5.dp).selectableGroup(), verticalAlignment = Alignment.CenterVertically) {
+    OrchardGlassSurface(Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(bottom = 8.dp).navigationBarsPadding()) {
+        Row(Modifier.fillMaxWidth().padding(4.dp).selectableGroup(), verticalAlignment = Alignment.CenterVertically) {
             destinations.forEach { destination ->
                 val active = selected == destination.key
-                Column(Modifier.weight(1f).clip(CircleShape).background(if (active) c.onSurface.copy(alpha = .065f) else Color.Transparent)
+                Column(Modifier.weight(1f).clip(CircleShape).background(if (active) c.surface.copy(alpha = .85f) else Color.Transparent)
                     .selectable(active, interactionSource = orchardPressSource(), indication = null, role = Role.Tab, onClick = { onSelect(destination.key) })
-                    .heightIn(min = 58.dp).padding(horizontal = 8.dp, vertical = 8.dp),
+                    .heightIn(min = (OrchardTokens.size_tab - 8).dp).padding(horizontal = 6.dp, vertical = 4.dp),
                     horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                    Icon(destination.icon, null, tint = if (active) c.primary else c.onSurfaceVariant, modifier = Modifier.size(24.dp))
-                    Text(destination.label, color = if (active) c.primary else c.onSurfaceVariant,
-                        style = MaterialTheme.typography.labelMedium.copy(fontSize = 11.sp, lineHeight = 14.sp, fontWeight = FontWeight.SemiBold))
+                    Icon(if (active) destination.selectedIcon else destination.icon, null, tint = if (active) c.primary else c.onSurface, modifier = Modifier.size(24.dp))
+                    Text(destination.label, color = if (active) c.primary else c.onSurface,
+                        style = MaterialTheme.typography.labelMedium.copy(fontSize = 10.sp, lineHeight = 13.sp, fontWeight = FontWeight.SemiBold))
                 }
             }
         }
@@ -85,7 +85,10 @@ fun OrchardScaffold(
             Box(Modifier.fillMaxSize().onGloballyPositioned { backdrop.origin = it.positionInRoot() }.drawWithContent {
                 layer.record { this@drawWithContent.drawContent() }
                 drawLayer(layer)
-            }) { content(padding) }
+            }) {
+                // A surface inside the recorded content must never sample its own graphics layer.
+                CompositionLocalProvider(LocalOrchardBackdrop provides null) { content(padding) }
+            }
         }
     }
 }

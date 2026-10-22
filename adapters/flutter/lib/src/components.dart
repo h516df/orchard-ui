@@ -105,8 +105,7 @@ class OrchardSection extends StatelessWidget {
           child: Text(title, style: Theme.of(context).textTheme.bodySmall),
         ),
       ),
-      OrchardCard(
-        padding: EdgeInsets.zero,
+      OrchardGroup(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: children,
@@ -143,9 +142,9 @@ class OrchardListRow extends StatelessWidget {
     final c = theme.colorScheme;
     final large = MediaQuery.textScalerOf(context).scale(17) > 25.5;
     final body = ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 52),
+      constraints: const BoxConstraints(minHeight: OrchardTokens.sizeRow),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
         child: Row(
           children: [
             if (leading != null) ...[leading!, const SizedBox(width: 12)],
@@ -798,11 +797,11 @@ class OrchardTabBar extends StatelessWidget {
     final c = Theme.of(context).colorScheme;
     return SafeArea(
       top: false,
-      minimum: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+      minimum: const EdgeInsets.fromLTRB(24, 0, 24, 8),
       child: OrchardGlassSurface(
         reducedTransparency: reducedTransparency,
         child: Padding(
-          padding: const EdgeInsets.all(5),
+          padding: const EdgeInsets.all(4),
           child: Row(
             children: [
               for (final destination in destinations)
@@ -813,13 +812,13 @@ class OrchardTabBar extends StatelessWidget {
                     child: CupertinoButton(
                       onPressed: () => onSelect(destination.key),
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 8,
+                        horizontal: 6,
+                        vertical: 4,
                       ),
-                      minimumSize: const Size(48, 58),
+                      minimumSize: const Size(48, 50),
                       borderRadius: BorderRadius.circular(999),
                       color: destination.key == selected
-                          ? c.onSurface.withValues(alpha: .065)
+                          ? c.surface.withValues(alpha: .85)
                           : null,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -834,7 +833,7 @@ class OrchardTabBar extends StatelessWidget {
                           Text(
                             destination.label,
                             style: TextStyle(
-                              fontSize: 11,
+                              fontSize: 10,
                               height: 1.3,
                               fontWeight: FontWeight.w600,
                               color: destination.key == selected
@@ -853,4 +852,18 @@ class OrchardTabBar extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Inset grouped lists use the App reference radius, separate from content cards.
+class OrchardGroup extends StatelessWidget {
+  const OrchardGroup({super.key, required this.child});
+  final Widget child;
+  @override
+  Widget build(BuildContext context) => ClipRRect(
+    borderRadius: BorderRadius.circular(OrchardTokens.radiusGroup),
+    child: ColoredBox(
+      color: Theme.of(context).colorScheme.surface,
+      child: child,
+    ),
+  );
 }
