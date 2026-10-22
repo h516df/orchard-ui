@@ -1,5 +1,7 @@
 # 验证记录 · 0.4 Liquid Glass与动态流程
 
+交付：[PR #5](https://github.com/h516df/orchard-ui/pull/5)已合入私有main（`c3431e1073d5cac057530ba742b1e9b39c887b01`），[v0.4.0](https://github.com/h516df/orchard-ui/releases/tag/v0.4.0)提供构建产物。没有触发Actions或公开部署。
+
 日期2026-10-22。主体源码已提交并推送为`2f0ecabef16ce6dae1802a7fda2086f298e8c924`；Flutter菜单Esc关闭/屏幕边界修复提交为`484acd2956e4e6066d32c8632eef904ce0ee1876`。后续菜单可读性修正为`15a7f8bf2c87550e2815c6b46e3a8df940f78fb2`，仅提高菜单表面的不透明度/模糊。两次后续提交都只改Flutter音乐宿主及对应测试，已用Git差异核对其他适配源码完全相同。最终预览/回执提交不改变运行时源码。
 
 | 范围 | 实际命令 / 来源 | 结果 |

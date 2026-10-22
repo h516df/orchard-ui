@@ -52,5 +52,10 @@
       "source_commit": "15a7f8bf2c87550e2815c6b46e3a8df940f78fb2"
     }
   },
-  "status": "passed"
+  "status": "passed",
+  "delivery": {
+    "pull_request": "https://github.com/h516df/orchard-ui/pull/5",
+    "merge_commit": "c3431e1073d5cac057530ba742b1e9b39c887b01",
+    "release": "https://github.com/h516df/orchard-ui/releases/tag/v0.4.0"
+  }
 }
