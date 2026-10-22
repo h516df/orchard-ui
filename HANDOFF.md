@@ -7,7 +7,7 @@
 - 优先评估：Flutter liquid_glass_widgets1.14.0（发布版含iOS27配置/融合/导航模式）、Compose Backdrop2.0.1、View/XML QWEA0库v2.0.11、RN react-native-blur6.0.2；Callstack玻璃默认Android实现是普通View，不能用作安卓后端。Web rdev候选维护与浏览器兼容需谨慎。
 - 静态读了lens/RuntimeShader/交互Tabs、Flutter材质与平台差异、RN背景捕获/防循环、Callstack默认平台实现；没有运行这些库或搬入其源码/素材。尤其留意Flutter滚动层premium限制、Backdrop编译SDK37 vs本库36、RN bitmap背景捕获成本。
 - 本批仅更新资料/规范/需求/选型，运行时源码、50项历史结果与预览保持原版本含义。检查只需文档链接、JSON及diff；不重复构建或把历史测试记作候选库通过。下一步按研究中完整流程验证可替换材质后端；不强制换技术栈。
-- 当前准备提交研究PR，远端回执待交付时补充；用户对“最新iOS完整效果”的验收未取得。
+- 研究记录已通过[PR #4](https://github.com/h516df/orchard-ui/pull/4)合入main，来源c8c0c01，合并提交4c94a9e3635bc1f3c1941a5779162c66652131d9；后续回执仅改文档。仓库仍private，未新增UI版本标签；文档链接/JSON/diff检查passed。用户对“最新iOS完整效果”的验收未取得。
 
 ---
 
