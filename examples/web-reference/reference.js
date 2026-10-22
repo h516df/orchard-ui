@@ -438,7 +438,7 @@ window.addEventListener(
   "scroll",
   () => {
     const header = app.querySelector(".o-app-header");
-    if (header) header.dataset.scrolled = String(window.scrollY > 96);
+    if (header) header.dataset.scrolled = String(window.scrollY > 72);
   },
   { passive: true },
 );

@@ -1311,7 +1311,7 @@ export function OrchardAppPage({
   const { colors: c } = useOrchard();
   const scroll = React.useRef(new Animated.Value(0)).current;
   const opacity = scroll.interpolate({
-    inputRange: [72, 96],
+    inputRange: [48, 72],
     outputRange: [0, 1],
     extrapolate: "clamp",
   });

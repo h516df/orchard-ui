@@ -109,6 +109,7 @@ test("three pages render light and dark; narrow large type keeps docks within vi
 });
 
 test('scrolling replaces large title with compact navigation and keeps actions usable', async ({page}) => {
+  await page.setViewportSize({width:393,height:600});
   await page.goto(url + '?page=notes');
   await page.evaluate(() => window.scrollTo(0, 300));
   await expect(page.locator('.o-header-middle')).toHaveCSS('opacity', '1');

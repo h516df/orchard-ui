@@ -47,7 +47,7 @@ fun OrchardAppPage(title: String, modifier: Modifier = Modifier, subtitle: Strin
     val reduced = LocalOrchardReducedMotion.current
     val compactProgress by remember(scroll, density, reduced) { derivedStateOf {
         val y = scroll.value / density.density
-        if (reduced) if (y > 96f) 1f else 0f else ((y - 72f) / 24f).coerceIn(0f, 1f)
+        if (reduced) if (y > 72f) 1f else 0f else ((y - 48f) / 24f).coerceIn(0f, 1f)
     } }
     OrchardScaffold(modifier, bottomBar = bottomBar) { padding ->
         Box(Modifier.fillMaxSize().background(background)) {

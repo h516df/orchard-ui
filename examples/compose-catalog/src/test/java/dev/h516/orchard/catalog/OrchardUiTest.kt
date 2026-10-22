@@ -222,7 +222,8 @@ class OrchardUiTest {
 
     @Test fun largeTitleCollapsesAboveScrolledContent() {
         compose.setContent { CatalogApp(initialDark = false, initialPage = "notes") }
-        compose.onNodeWithText("雨停之后").performScrollTo()
+        compose.onRoot().performTouchInput { swipeUp() }
+        compose.onAllNodesWithText("备忘录").assertCountEquals(8)
         compose.onNodeWithText("雨停之后").assertIsDisplayed()
         capture("notes-scrolled-light")
     }
