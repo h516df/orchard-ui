@@ -33,3 +33,7 @@ GitHub Actions 提供手动 **Validate adapters** 工作流，不自动发布包
 ## 续接
 
 先读 HANDOFF 的当前记录，再核对 GitHub。规则、源码与验证要一起推送，准确提交由远端读回；不能把这台 VM 当长期备份。现有 App 接入是各项目后续独立任务，不在本库创建时自动改写其他仓库。
+
+## 0.4 Flutter独立宿主
+
+`examples/flutter-liquid`提供Android/Web可运行示例，`bash cloud/check.sh flutter`同时检查适配层与音乐宿主。在宿主目录运行`flutter build apk --debug`或`flutter build web --no-web-resources-cdn`。首次Android构建可能需下载Flutter固定的NDK28.2.13676358/CMake3.22.1/BuildTools35；通过环境代理和可信CA，不关闭TLS校验。仅本地构建，不触发Actions或公开部署。

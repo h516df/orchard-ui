@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'dart:ui' show ImageFilter;
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
+import 'liquid.dart';
 import 'generated_tokens.dart';
 import 'theme.dart';
 
@@ -734,37 +735,18 @@ class OrchardGlassSurface extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = Theme.of(context).colorScheme;
-    final body = DecoratedBox(
-      decoration: BoxDecoration(
-        color: c.surface.withValues(alpha: reducedTransparency ? 1 : .8),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(
-          color: c.outlineVariant.withValues(alpha: .5),
-          width: .75,
-        ),
-      ),
+    final opaque = reducedTransparency || OrchardGlassScope.opaqueOf(context);
+    if (opaque) {
+      return DecoratedBox(
+        decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(999), border: Border.all(color: c.outlineVariant, width: .75)),
+        child: child,
+      );
+    }
+    return AdaptiveGlass(
+      shape: const LiquidRoundedSuperellipse(borderRadius: 999),
+      settings: OrchardGlassScope.settingsOf(context),
+      quality: OrchardGlassScope.maybeOf(context)?.quality ?? GlassQuality.standard,
       child: child,
-    );
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(999),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x18000000),
-            blurRadius: 20,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(999),
-        child: reducedTransparency
-            ? body
-            : BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-                child: body,
-              ),
-      ),
     );
   }
 }

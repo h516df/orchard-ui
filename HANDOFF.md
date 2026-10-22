@@ -1,3 +1,14 @@
+# 当前交接 · 0.4新版材质与动态流程
+
+日期2026-10-22，承接用户“搞”，任务OUI-005，分支`feat/ios27-liquid-interactions`。基线main `c963f4b`。
+
+- 已实现的材质/交互、各框架差异、采用版本和接入见[LIQUID_GLASS](docs/LIQUID_GLASS.md)。Compose实际采用兼容SDK36的Backdrop1.0.6；Flutter1.14.0、RNblur6.0.2已安装并有真实适配代码；Web不声称光学折射。
+- Compose音乐流程新增连续着色、收起底栏、拖选提交/取消、锚点子菜单、真实待播状态与可部分展开播放器。新增独立Flutter音乐宿主，Web同步流程。RN仅覆盖材质、受控收起与选择动画，未提供本批锚点/共享形变适配。
+- 本批只改此私有库，无其他App迁移/数据库/签名变更或公开部署。真实设备验收、RN宿主构建和用户视觉认可未取得。历史0.3结果保留在下文，不能代替0.4验证。
+- 已从固定源码完成58项检查及两套Android演示构建：主体`2f0ecab`，Flutter菜单交互`484acd2`、菜单可读性`15a7f8b`，后两者只改Flutter宿主/测试，其他源码相同。产物与检查归属见[VERIFICATION](docs/VERIFICATION.md)与[预览manifest](docs/previews/manifest.json)。
+
+---
+
 # 当前交接 · 最新iOS与GitHub资源核对（研究）
 
 2026-10-22，用户再次反馈0.3太老、缺特性，并明确要求网上/GitHub搜索。当前批次为版本与候选研究，代码基线main/v0.3.0 `5da1e128bf5f4cb9ad48b2adb1aa060d91047eb2`，分支docs/latest-ios-research。

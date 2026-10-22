@@ -1,5 +1,5 @@
 import React from "react";
-import { BackHandler, TextInput } from "react-native";
+import { BackHandler, TextInput, Dimensions } from "react-native";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import {
   OrchardAppPage,
@@ -269,4 +269,40 @@ test("app reference patterns delegate search, opening, compose and playback to h
   expect(onQuery).toHaveBeenCalledWith("散步");
   for (const action of [onOpen, onCompose, onPlay, onNext])
     expect(action).toHaveBeenCalledTimes(1);
+});
+
+test("native material receives continuous tint and reduced transparency bypasses sampling", async () => {
+  const previous = Dimensions.get("window");
+  Dimensions.set({ window: { ...previous, fontScale: 1 } });
+  const { LiquidGlassView } = require("@sbaiahmed1/react-native-blur");
+  const { OrchardGlassSurface } = require("../src");
+  let tree!: ReactTestRenderer;
+  await act(async () => {
+    tree = create(
+      <OrchardProvider glassTint={0.8} reduceMotion>
+        <OrchardGlassSurface>
+          <TextInput value="前景" />
+        </OrchardGlassSurface>
+      </OrchardProvider>,
+    );
+  });
+  cleanup.push(tree);
+  expect(tree.root.findByType(LiquidGlassView).props.glassOpacity).toBeCloseTo(
+    0.804,
+  );
+  expect(tree.root.findByType(LiquidGlassView).props.isInteractive).toBe(false);
+  await act(async () => {
+    tree.update(
+      <OrchardProvider glassTint={0.8} reducedTransparency>
+        <OrchardGlassSurface>
+          <TextInput value="前景" />
+        </OrchardGlassSurface>
+      </OrchardProvider>,
+    );
+  });
+  expect(tree.root.findAllByType(LiquidGlassView)).toHaveLength(0);
+  expect(tree.root.findByType(TextInput).props.value).toBe("前景");
+  await act(async () => {
+    Dimensions.set({ window: previous });
+  });
 });

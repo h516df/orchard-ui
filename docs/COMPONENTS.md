@@ -34,7 +34,7 @@ v0.3 提供可独立选用的适配层。名称统一表达意图，API 按各�
 | 草稿编辑页面 | `OrchardEditorScreen` | 同名 | 同名 | 宿主，规则已提供 |
 | 导入预览 | `OrchardImportReview` | 同名 | 宿主组合 | 宿主组合 |
 | 有限宽可选文字阅读 | `OrchardReadingSurface` | 同名 | 同名 | `.o-reading` |
-| 导航材质 | `OrchardGlassSurface`，API31+背景模糊 | 同名，BackdropFilter | 同名，默认实色/宿主renderBackdrop | backdrop-filter/不透明回退 |
+| 导航材质 | `OrchardGlassSurface`，Backdrop1.0.6；33+折射、31+模糊 | 同名，AdaptiveGlass；Impeller premium/其他渲染器回退 | 同名，native LiquidGlassView；降低透明度实色 | backdrop-filter/不透明回退 |
 
 ## App 页面模式（0.3）
 
@@ -56,3 +56,13 @@ Compose、Flutter、RN均有 `OrchardAppPage`、`OrchardRoundButton`、`OrchardS
 复杂日期选择器、图表、地图、拖拽排序、分页阅读引擎、文件/媒体解析、数据库迁移、下载器、应用更新、登录、AI 调用、真机触感实现均不在首版核心代码中。优先复用 [成熟能力](STACK_CHOICES.md)，必要时加适配层。
 
 验证范围见 [VERIFICATION](VERIFICATION.md)。原生界面宿主渲染、Flutter widget test、RN renderer test 与 Chromium 测试证明的内容不同，均不能代替所有真实设备体验。
+
+## 0.4 动态材质与流程
+
+- 四适配共享玻璃默认着色/模糊范围/透镜尺寸tokens；Compose `OrchardTheme(glassTint=...)`、Flutter `OrchardGlassScope(tint:...)`、RN `OrchardProvider(glassTint=...)`、Web `setOrchardGlassTint(0..1)`。
+- Compose：`rememberOrchardDockCollapsed` + `OrchardTabBar(compact=...)`；选择透镜可拖动，取消不提交；`OrchardMenu`锚点菜单/子菜单；`OrchardSheet`支持部分展开。菜单采用实色高可读表面，尚无Apple共享几何融合；Sheet沿用平台弹层基础设施。
+- Flutter：新增Shader初始化/应用包装/外观Scope；完整音乐宿主使用GlassScaffold隔离滚动内容与底栏，库的可收起导航/融合附件/锚点子菜单/触发器形变弹层，含待播队列与搜索。
+- RN：原生材质后端、连续着色/不透明回退；AppPage滚动状态回调、可收起TabBar和移动选择底片。当前仍无锚点菜单/形变弹层适配、无RN原生宿主构建或设备验证。
+- Web：独立JS外观/滚动控制器/原生Popover锚点菜单，示例具有待播队列、双高度播放器和开启形变近似；CSS材质不声称光学折射。
+
+采用、接口示例及真实限制见[材质接入](LIQUID_GLASS.md)。

@@ -175,3 +175,25 @@ textarea.o-input { min-block-size: 9rem; resize: vertical; }
 [data-orchard-transparency=reduced] :is(.o-glass,.o-round-button,.o-compact-header) { background: var(--o-surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
 @media (prefers-reduced-transparency: reduce) { .o-glass,.o-round-button,.o-compact-header { background: var(--o-surface); backdrop-filter: none; -webkit-backdrop-filter: none; } }
 @media (max-width: 22rem) { .o-app-title { padding-inline: 20px; } .o-app-content { padding-inline: 16px; } .o-row__value { max-inline-size: 40%; overflow-wrap: anywhere; } }
+
+/* 0.4: continuous functional-layer tint and directional navigation collapse. */
+.o-glass, .o-bottom-nav {
+  background: color-mix(in srgb, var(--o-surface) calc(18% + var(--o-glass-tint) * .78%), transparent);
+  backdrop-filter: blur(calc(4px + var(--o-glass-tint) * .12px)) saturate(160%);
+  -webkit-backdrop-filter: blur(calc(4px + var(--o-glass-tint) * .12px)) saturate(160%);
+}
+.o-media-dock .o-bottom-nav { align-self: center; transition: inline-size 280ms cubic-bezier(.2,.8,.2,1); }
+.o-media-dock[data-collapsed=true] .o-bottom-nav { inline-size: 72%; }
+.o-media-dock[data-collapsed=true] .o-bottom-nav .o-tab-label { display: none; }
+.o-bottom-nav a { position: relative; transition: color 150ms, transform 200ms; }
+.o-bottom-nav a:active { transform: scale(1.08); }
+.o-anchored-menu { position: fixed; inset: auto; margin: 0; padding: 6px; inline-size: min(260px, calc(100vw - 16px)); border: .75px solid var(--o-divider); border-radius: 28px; color: var(--o-text); background: color-mix(in srgb,var(--o-surface) 96%,transparent); box-shadow: 0 12px 40px #0003; backdrop-filter: blur(20px); transform-origin: top right; }
+.o-anchored-menu:popover-open { animation: o-menu-enter 160ms cubic-bezier(.2,.8,.2,1); }
+.o-anchored-menu button { display: block; inline-size: 100%; min-block-size: 48px; padding: 12px 14px; text-align: start; border: 0; background: transparent; color: inherit; border-radius: 22px; font: inherit; cursor: pointer; }
+.o-anchored-menu button:focus-visible, .o-anchored-menu button:hover { background: color-mix(in srgb,var(--o-text) 8%,transparent); outline-offset: -3px; }
+.o-anchored-menu button + button { border-block-start: .5px solid var(--o-divider); }
+@keyframes o-menu-enter { from { opacity: 0; transform: scale(.88); } to { opacity: 1; transform: scale(1); } }
+[data-orchard-transparency=reduced] :is(.o-glass,.o-bottom-nav,.o-anchored-menu) { background: var(--o-surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
+@media (prefers-reduced-transparency: reduce) { .o-glass,.o-bottom-nav,.o-anchored-menu { background: var(--o-surface); backdrop-filter: none; -webkit-backdrop-filter: none; } }
+@media (prefers-reduced-motion: reduce) { .o-media-dock .o-bottom-nav, .o-bottom-nav a { transition: none; } .o-anchored-menu:popover-open { animation: none; } }
+@media (min-resolution: 1dppx) and (max-width: 22rem) { .o-media-dock[data-collapsed=true] .o-bottom-nav { inline-size: 100%; } }

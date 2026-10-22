@@ -112,12 +112,12 @@ fun OrchardNoteRow(title: String, preview: String, time: String, onClick: () -> 
 
 /** UI only: playback and next track callbacks belong to the host's media engine. */
 @Composable
-fun OrchardMiniPlayer(title: String, playing: Boolean, onPlayPause: () -> Unit, onNext: () -> Unit, modifier: Modifier = Modifier, artwork: @Composable () -> Unit = { Icon(OrchardIcons.Music, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(22.dp)) }) {
+fun OrchardMiniPlayer(title: String, playing: Boolean, onPlayPause: () -> Unit, onNext: () -> Unit, modifier: Modifier = Modifier, onOpen: (() -> Unit)? = null, artwork: @Composable () -> Unit = { Icon(OrchardIcons.Music, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(22.dp)) }) {
     val c = MaterialTheme.colorScheme
     OrchardGlassSurface(modifier.fillMaxWidth()) {
         Row(Modifier.fillMaxWidth().heightIn(min = 50.dp).padding(start = 10.dp, end = 4.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Box(Modifier.size(32.dp).clip(androidx.compose.foundation.shape.RoundedCornerShape(6.dp)).background(c.onSurface.copy(alpha = .05f)), contentAlignment = Alignment.Center) { artwork() }
-            Text(title, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(title, modifier = Modifier.weight(1f).then(if (onOpen != null) Modifier.clickable(role = Role.Button, onClickLabel = "打开正在播放", onClick = onOpen) else Modifier), style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold), maxLines = 1, overflow = TextOverflow.Ellipsis)
             OrchardIconButton(if (playing) OrchardIcons.Pause else OrchardIcons.Play, if (playing) "暂停" else "播放", onPlayPause, tint = c.onSurface)
             OrchardIconButton(OrchardIcons.Forward, "下一首", onNext, tint = c.onSurface)
         }

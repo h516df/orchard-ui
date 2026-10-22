@@ -13,7 +13,10 @@ css = (ROOT / 'adapters/web/tokens.css').read_text() + (ROOT / 'adapters/web/orc
 css += (source / 'reference.css').read_text()
 html = re.sub(r'<link\s+rel="stylesheet"\s+href="[^"]+"\s*/?>', '', html)
 html = html.replace('</head>', '<style>' + css + '</style></head>')
-html = html.replace('<script type="module" src="./reference.js"></script>', '<script type="module">' + (source / 'reference.js').read_text() + '</script>')
+script = (source / 'reference.js').read_text()
+script = re.sub(r'^import[\s\S]*?;\n', '', script)
+script = (ROOT / 'adapters/web/orchard.js').read_text().replace('export ', '') + '\n' + script
+html = html.replace('<script type="module" src="./reference.js"></script>', '<script type="module">' + script + '</script>')
 args.output.parent.mkdir(parents=True, exist_ok=True)
 args.output.write_text(html)
 print(args.output)

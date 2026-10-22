@@ -4,7 +4,7 @@ plugins {
     id("maven-publish")
 }
 group = "dev.h516.orchard"
-version = "0.3.0"
+version = "0.4.0"
 android {
     namespace = "dev.h516.orchard"
     compileSdk = 36
@@ -21,6 +21,7 @@ dependencies {
     api("androidx.compose.ui:ui")
     api("androidx.compose.foundation:foundation")
     api("androidx.compose.material3:material3")
+    implementation("io.github.kyant0:backdrop:1.0.6")
     implementation("androidx.activity:activity-compose:1.13.0")
 }
 afterEvaluate {
