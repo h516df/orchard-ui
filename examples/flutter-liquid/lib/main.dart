@@ -451,7 +451,13 @@ class _MusicState extends State<MusicPage> {
                 autoAdjustToScreen: true,
                 menuPadding: const EdgeInsets.all(8),
                 semanticLabel: '${names[i]}的操作',
-                settings: settings,
+                settings: settings.copyWith(
+                  glassColor: Theme.of(context).colorScheme.surface.withValues(
+                    alpha: OrchardGlassScope.opaqueOf(context) ? 1 : .94,
+                  ),
+                  frost: 20,
+                  blur: 8,
+                ),
                 quality: quality,
                 trigger: const Padding(
                   padding: EdgeInsets.all(12),
