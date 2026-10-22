@@ -1,3 +1,16 @@
+# 当前交接 · 最新iOS与GitHub资源核对（研究）
+
+2026-10-22，用户再次反馈0.3太老、缺特性，并明确要求网上/GitHub搜索。当前批次为版本与候选研究，代码基线main/v0.3.0 `5da1e128bf5f4cb9ad48b2adb1aa060d91047eb2`，分支docs/latest-ios-research。
+
+- 官方当前正式版已核对为iOS27.0.1，2026-09-28发布；27延续Liquid Glass并新增连续外观调节/可读性改良。0.3混用17/26参考，不能宣称最新完整实现。
+- [研究记录](docs/research/2026-10-22-ios27.md)包含8类当前缺项、7个跨框架候选、固定来源和实际限制；[机器清单](docs/research/2026-10-22-libraries.json)保留提交/版本/许可。
+- 优先评估：Flutter liquid_glass_widgets1.14.0（发布版含iOS27配置/融合/导航模式）、Compose Backdrop2.0.1、View/XML QWEA0库v2.0.11、RN react-native-blur6.0.2；Callstack玻璃默认Android实现是普通View，不能用作安卓后端。Web rdev候选维护与浏览器兼容需谨慎。
+- 静态读了lens/RuntimeShader/交互Tabs、Flutter材质与平台差异、RN背景捕获/防循环、Callstack默认平台实现；没有运行这些库或搬入其源码/素材。尤其留意Flutter滚动层premium限制、Backdrop编译SDK37 vs本库36、RN bitmap背景捕获成本。
+- 本批仅更新资料/规范/需求/选型，运行时源码、50项历史结果与预览保持原版本含义。检查只需文档链接、JSON及diff；不重复构建或把历史测试记作候选库通过。下一步按研究中完整流程验证可替换材质后端；不强制换技术栈。
+- 当前准备提交研究PR，远端回执待交付时补充；用户对“最新iOS完整效果”的验收未取得。
+
+---
+
 # 当前交接 · Orchard UI 0.3 Apple App 页面
 
 日期：2026-10-22。用户要求“改呀，要做到就是苹果官方App”。按[具体原版来源](docs/APPLE_APP_REFERENCES.md)重做完整页面，需求见docs/BACKLOG的OUI-003；不要把已保存/测试通过写成用户已接受或100%等同苹果。
