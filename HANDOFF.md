@@ -10,7 +10,7 @@
 - 单文件预览：`python3 tools/build_reference.py` → `.cloud/preview/orchard-reference.html`；通过Chromium本地HTTP三页/菜单/深色检查，0外部请求/0页面错误。临时文件不入Git；file://当前被环境策略拦截，不冒充已跑。
 - 仍待：用户视觉认可、实体设备IME/系统栏/手势/TalkBack/性能与帧率、Flutter/RN原生宿主。没有运行Actions、改写其他App或公开部署。
 - 本轮APK SHA256：`9eb8d9ce486074c3d9a988e31e6c0b99497039d1080dd45e622c07b438ca54c6`；release AAR：`14537631c0edd03fd1aa66f5dcf3adfc00ce9c270a69e992ff405b40b0af41fa`，均对应已验证Android源码01d586e。
-- 当前准备保存预览/验证回执并提交PR；最终远端合并/标签状态以交付回执为准。
+- 已通过[PR #3](https://github.com/h516df/orchard-ui/pull/3)合入main，合并提交`7191cdf398c9d58fe71b169872b20a90a6e28db6`；本回执为后续文档提交，版本标记v0.3.0。远端main/标签交付时读回；仓库private，旧标签保留。下一次从main/v0.3.0接续，按具体原版页面继续核对，不回退组件陈列首页。
 
 ---
 
