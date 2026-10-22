@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:orchard_ui/orchard_ui.dart';
 
@@ -135,12 +136,32 @@ class MusicPage extends StatefulWidget {
 class _MusicState extends State<MusicPage> {
   final scroll = ScrollController();
   final minimize = GlassTabBarMinimizeController();
+  final menus = List.generate(names.length, (_) => GlassMenuController());
+  @override
+  void initState() {
+    super.initState();
+    HardwareKeyboard.instance.addHandler(closeMenuOnEscape);
+  }
+
+  bool closeMenuOnEscape(KeyEvent event) {
+    if (event is! KeyDownEvent ||
+        event.logicalKey != LogicalKeyboardKey.escape) {
+      return false;
+    }
+    final opened = menus.where((menu) => menu.isOpen).toList();
+    for (final menu in opened) {
+      menu.close();
+    }
+    return opened.isNotEmpty;
+  }
+
   int tab = 2, track = 0;
   bool playing = false, hasTrack = false;
   String query = '', category = '';
   final queue = <int>[];
   @override
   void dispose() {
+    HardwareKeyboard.instance.removeHandler(closeMenuOnEscape);
     scroll.dispose();
     minimize.dispose();
     super.dispose();
@@ -426,6 +447,9 @@ class _MusicState extends State<MusicPage> {
                 child: Text(names[i], style: const TextStyle(fontSize: 17)),
               ),
               GlassMenu(
+                controller: menus[i],
+                autoAdjustToScreen: true,
+                menuPadding: const EdgeInsets.all(8),
                 semanticLabel: '${names[i]}的操作',
                 settings: settings,
                 quality: quality,
