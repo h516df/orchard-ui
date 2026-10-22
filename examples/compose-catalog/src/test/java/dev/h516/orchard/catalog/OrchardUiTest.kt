@@ -191,6 +191,53 @@ class OrchardUiTest {
         compose.onNodeWithContentDescription("播放微风").assertDoesNotExist()
         compose.onNodeWithContentDescription("播放沿途").assertExists()
     }
+    @Test fun anchoredSubmenuQueuesTrackAndPlayerOffersDetents() {
+        compose.setContent { CatalogApp(initialDark = false, initialPage = "music") }
+        compose.onNodeWithContentDescription("播放慢一点").performClick()
+        compose.onNodeWithContentDescription("微风的操作").performClick()
+        capture("music-menu-light")
+        compose.onNodeWithText("添加到待播").performClick()
+        capture("music-submenu-light")
+        compose.onNodeWithText("插播下一首").performClick()
+        compose.onNodeWithText("微风 · 已设为下一首").assertExists()
+        compose.onNodeWithContentDescription("下一首").performClick()
+        compose.onNode(hasText("微风") and hasClickAction() and hasContentDescription("播放微风").not()).performClick()
+        compose.onNodeWithText("正在播放").assertExists()
+        capture("music-player-medium-light", dialog = true)
+        compose.onNode(isDialog()).performTouchInput { swipeUp() }
+        capture("music-player-expanded-light", dialog = true)
+    }
+
+    @Test fun navigationLensDragCommitsButCancellationPreservesTab() {
+        var current = "home"
+        compose.setContent {
+            var selected by remember { mutableStateOf(current) }
+            OrchardTheme { OrchardTabBar(listOf(
+                OrchardDestination("home", "主页", OrchardIcons.Home),
+                OrchardDestination("library", "资料库", OrchardIcons.Library)
+            ), selected, { selected = it; current = it }) }
+        }
+        compose.onNode(hasContentDescription("主页") and hasClickAction()).performTouchInput {
+            down(center); moveTo(center.copy(x = width * 1.4f)); cancel()
+        }
+        assertEquals("home", current)
+        compose.onNode(hasContentDescription("主页") and hasClickAction()).performTouchInput {
+            down(center); moveTo(center.copy(x = width * 1.4f), 200); up()
+        }
+        compose.onNode(hasContentDescription("资料库") and hasClickAction()).assertIsSelected()
+        assertEquals("library", current)
+    }
+
+    @Test fun musicScrollCollapsesAndReverseExpandsNavigation() {
+        compose.setContent { CatalogApp(initialDark = false, initialPage = "music") }
+        compose.onNodeWithContentDescription("播放微风").performScrollTo()
+        compose.onNodeWithContentDescription("播放沿途").performScrollTo()
+        compose.onNode(SemanticsMatcher.expectValue(androidx.compose.ui.semantics.SemanticsProperties.StateDescription, "导航已收起")).assertExists()
+        capture("music-dock-collapsed-light")
+        compose.onNode(hasScrollAction()).performSemanticsAction(androidx.compose.ui.semantics.SemanticsActions.ScrollBy) { it(0f, -500f) }
+        compose.onNode(SemanticsMatcher.expectValue(androidx.compose.ui.semantics.SemanticsProperties.StateDescription, "导航已展开")).assertExists()
+    }
+
     @Test fun referencePickerChangesPages() {
         compose.setContent { CatalogApp(initialDark = false) }
         compose.onNodeWithContentDescription("更多").performClick()

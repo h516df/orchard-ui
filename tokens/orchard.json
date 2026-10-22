@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0",
+  "version": "0.4.0",
   "spacing": {
     "xs": 4,
     "sm": 8,
@@ -157,5 +157,12 @@
         "buttonText": "#FFFFFF"
       }
     }
+  },
+  "glass": {
+    "tint": 45,
+    "blurMin": 4,
+    "blurMax": 16,
+    "lensRim": 16,
+    "lensDepth": 32
   }
 }

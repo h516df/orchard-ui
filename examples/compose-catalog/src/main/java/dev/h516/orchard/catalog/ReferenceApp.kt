@@ -7,6 +7,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -49,6 +50,7 @@ fun CatalogApp(initialDark: Boolean? = null, initialPage: String = "settings", i
     var mode by rememberSaveable { mutableStateOf("跟随系统") }
     var reduce by rememberSaveable { mutableStateOf(false) }
     var opaque by rememberSaveable { mutableStateOf(false) }
+    var glassTint by rememberSaveable { mutableFloatStateOf(.45f) }
     var query by rememberSaveable { mutableStateOf("") }
     var notesQuery by rememberSaveable { mutableStateOf("") }
     var airplane by rememberSaveable { mutableStateOf(false) }
@@ -87,7 +89,7 @@ fun CatalogApp(initialDark: Boolean? = null, initialPage: String = "settings", i
         ComponentCatalogApp(initialDark = dark, onExit = { page = "settings" })
         return
     }
-    OrchardTheme(dark = dark, reducedMotion = reduced, reducedTransparency = opaque) {
+    OrchardTheme(dark = dark, reducedMotion = reduced, reducedTransparency = opaque, glassTint = glassTint) {
         val c = MaterialTheme.colorScheme
         val musicScheme = c.copy(primary = if (dark) Color(0xFFFF536B) else MusicRed)
         AnimatedContent(targetState = if (editor) "editor" else if (page == "settings" && detail != "appearance") "settings/" else "$page/$detail", transitionSpec = {
@@ -100,7 +102,7 @@ fun CatalogApp(initialDark: Boolean? = null, initialPage: String = "settings", i
                     notes = notes.toMutableList().apply { if (selectedNote >= 0) set(selectedNote, entry) else add(0, entry) }
                     editor = false
                 }, { if (selectedNote >= 0) { notes = notes.filterIndexed { index, _ -> index != selectedNote }; editor = false } else editor = false })
-                target == "settings/appearance" -> DisplayReference(mode, { mode = it }, reduce, { reduce = it }, opaque, { opaque = it }, { detail = "" }, { menu = true })
+                target == "settings/appearance" -> DisplayReference(mode, { mode = it }, reduce, { reduce = it }, opaque, { opaque = it }, glassTint, { glassTint = it }, { detail = "" }, { menu = true })
                 target.startsWith("settings/") -> SettingsReference(query, { query = it }, airplane, { airplane = it }, wifi, bluetooth, { detail = it }, { menu = true })
                 target.startsWith("notes/") -> NotesReference(notes, notesQuery, { notesQuery = it }, { openNote(it) }, { page = "settings" }, { menu = true })
                 else -> referenceStates.SaveableStateProvider("music") { MaterialTheme(colorScheme = musicScheme) { MusicReference({ menu = true }, dark) } }
@@ -159,7 +161,7 @@ private fun SettingsReference(query: String, onQuery: (String) -> Unit, airplane
 }
 
 @Composable
-private fun DisplayReference(mode: String, onMode: (String) -> Unit, reduce: Boolean, onReduce: (Boolean) -> Unit, opaque: Boolean, onOpaque: (Boolean) -> Unit, onBack: () -> Unit, onMore: () -> Unit) {
+private fun DisplayReference(mode: String, onMode: (String) -> Unit, reduce: Boolean, onReduce: (Boolean) -> Unit, opaque: Boolean, onOpaque: (Boolean) -> Unit, glassTint: Float, onGlassTint: (Float) -> Unit, onBack: () -> Unit, onMore: () -> Unit) {
     val c = MaterialTheme.colorScheme
     var brightness by rememberSaveable { mutableFloatStateOf(.6f) }
     var trueTone by rememberSaveable { mutableStateOf(true) }
@@ -191,6 +193,12 @@ private fun DisplayReference(mode: String, onMode: (String) -> Unit, reduce: Boo
                 Icon(OrchardIcons.Sun, null, Modifier.size(25.dp), tint = c.onSurfaceVariant)
             }
             OrchardDivider(); OrchardSwitchRow("原彩显示", trueTone, { trueTone = it })
+        }
+        OrchardSection("Liquid Glass", footnote = "从清透到着色连续调节。降低透明度开启时优先使用实色。") {
+            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                OrchardSlider(glassTint, onGlassTint, "玻璃着色")
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) { Text("清透"); Text("着色 ${(glassTint * 100).toInt()}%") }
+            }
         }
         OrchardSection("辅助功能") {
             OrchardSwitchRow("减少动态效果", reduce, onReduce); OrchardDivider(); OrchardSwitchRow("降低透明度", opaque, onOpaque)
@@ -247,14 +255,25 @@ private fun MusicReference(onMore: () -> Unit, dark: Boolean) {
     var track by rememberSaveable { mutableIntStateOf(0) }
     var selected by rememberSaveable { mutableStateOf("") }
     var search by rememberSaveable { mutableStateOf("") }
+    val scroll = rememberScrollState()
+    val compact = rememberOrchardDockCollapsed(scroll)
+    var albumMenu by remember { mutableIntStateOf(-1) }
+    var nowPlaying by rememberSaveable { mutableStateOf(false) }
+    var queueMessage by rememberSaveable { mutableStateOf("") }
+    var queue by rememberSaveable { mutableStateOf(listOf<Int>()) }
     val names = listOf("微风", "慢一点", "沿途", "日落以后")
     val c = MaterialTheme.colorScheme
     val background = if (dark) Color.Black else Color.White
+    val nextTrack: () -> Unit = {
+        track = queue.firstOrNull() ?: ((track + 1) % names.size)
+        if (queue.isNotEmpty()) queue = queue.drop(1)
+        playing = true; hasTrack = true
+    }
     val title = when (tab) { "home" -> "主页"; "radio" -> "广播"; "search" -> "搜索"; else -> selected.ifEmpty { "资料库" } }
-    OrchardAppPage(title, onMore = onMore, onBack = if (selected.isNotEmpty()) ({ selected = "" }) else null, background = background, bottomBar = {
+    OrchardAppPage(title, scroll = scroll, onMore = onMore, onBack = if (selected.isNotEmpty()) ({ selected = "" }) else null, background = background, bottomBar = {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            OrchardMiniPlayer(if (hasTrack) names[track] else "未在播放", playing, { playing = !playing; hasTrack = true }, { track = (track + 1) % names.size; playing = true; hasTrack = true }, Modifier.padding(horizontal = 24.dp))
-            OrchardTabBar(listOf(OrchardDestination("home", "主页", OrchardIcons.Home), OrchardDestination("radio", "广播", OrchardIcons.Radio), OrchardDestination("library", "资料库", OrchardIcons.Library), OrchardDestination("search", "搜索", OrchardIcons.Search)), tab, { tab = it; selected = "" })
+            OrchardMiniPlayer(if (hasTrack) names[track] else "未在播放", playing, { playing = !playing; hasTrack = true }, nextTrack, Modifier.padding(horizontal = 24.dp), onOpen = { nowPlaying = true }, artwork = { AlbumArt(if (hasTrack) names[track] else "", track, Modifier.fillMaxSize().clearAndSetSemantics {}) })
+            OrchardTabBar(listOf(OrchardDestination("home", "主页", OrchardIcons.Home), OrchardDestination("radio", "广播", OrchardIcons.Radio), OrchardDestination("library", "资料库", OrchardIcons.Library), OrchardDestination("search", "搜索", OrchardIcons.Search)), tab, { tab = it; selected = "" }, compact = compact)
         }
     }) {
         if (tab == "library" && selected.isEmpty()) Column {
@@ -270,16 +289,35 @@ private fun MusicReference(onMore: () -> Unit, dark: Boolean) {
         if (tab == "search") OrchardSearchField(search, { search = it }, label = "音乐、艺人、专辑")
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Text(if (tab == "radio") "电台精选" else if (tab == "home") "为你精选" else if (selected.isNotEmpty()) selected else if (tab == "search") "浏览分类" else "最近添加", style = MaterialTheme.typography.headlineSmall)
+            if (queueMessage.isNotEmpty()) Text(queueMessage, style = MaterialTheme.typography.bodySmall, modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite })
             names.indices.filter { search.isBlank() || names[it].contains(search) }.chunked(2).forEach { row ->
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                    row.forEach { i -> Column(Modifier.weight(1f).semantics { contentDescription = "播放${names[i]}" }.clickable { track = i; playing = true; hasTrack = true }, verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                    row.forEach { i -> Column(Modifier.weight(1f).semantics { contentDescription = "播放${names[i]}" }.combinedClickable(onClick = { track = i; playing = true; hasTrack = true }, onLongClick = { albumMenu = i }), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                         AlbumArt(names[i], i, Modifier.fillMaxWidth().aspectRatio(1f))
-                        Text(names[i], style = MaterialTheme.typography.bodyMedium)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(names[i], Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
+                            OrchardMenu(albumMenu == i, { albumMenu = -1 }, listOf(
+                                OrchardMenuAction("现在播放", { track = i; playing = true; hasTrack = true; nowPlaying = true }),
+                                OrchardMenuAction("添加到待播", children = listOf(
+                                    OrchardMenuAction("插播下一首", { queue = listOf(i) + queue; queueMessage = "${names[i]} · 已设为下一首" }),
+                                    OrchardMenuAction("最后播放", { queue = queue + i; queueMessage = "${names[i]} · 已添加到待播末尾" }))),
+                                OrchardMenuAction("查看专辑", { selected = names[i] })
+                            )) { OrchardIconButton(OrchardIcons.More, "${names[i]}的操作", { albumMenu = i }) }
+                        }
                         Text("Orchard Sessions", style = MaterialTheme.typography.bodySmall, color = c.onSurfaceVariant)
                     } }
                     if (row.size == 1) Spacer(Modifier.weight(1f))
                 }
             }
+        }
+    }
+    if (nowPlaying) OrchardSheet("正在播放", { nowPlaying = false }) {
+        AlbumArt(if (hasTrack) names[track] else "未在播放", track, Modifier.fillMaxWidth().aspectRatio(1f))
+        Text(if (hasTrack) names[track] else "未在播放", style = MaterialTheme.typography.headlineLarge)
+        Text("Orchard Sessions · 本地演示", color = c.onSurfaceVariant)
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+            OrchardRoundButton(if (playing) OrchardIcons.Pause else OrchardIcons.Play, if (playing) "暂停" else "播放", { playing = !playing; hasTrack = true })
+            OrchardRoundButton(OrchardIcons.Forward, "下一首", nextTrack)
         }
     }
 }

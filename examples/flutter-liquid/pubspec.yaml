@@ -1,0 +1,23 @@
+name: orchard_liquid
+description: "Orchard reusable Liquid Glass music reference. Synthetic local data only."
+publish_to: 'none'
+version: 0.4.0+4
+
+environment:
+  sdk: ^3.11.3
+
+dependencies:
+  orchard_ui:
+    path: ../../adapters/flutter
+  liquid_glass_widgets: 1.14.0
+  cupertino_icons: 1.0.8
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

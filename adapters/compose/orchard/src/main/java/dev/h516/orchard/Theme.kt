@@ -77,11 +77,13 @@ fun OrchardTheme(
     dark: Boolean = isSystemInDarkTheme(),
     reducedMotion: Boolean = rememberOrchardReducedMotion(),
     reducedTransparency: Boolean = false,
+    glassTint: Float = OrchardTokens.glass_tint / 100f,
     content: @Composable () -> Unit,
 ) {
     val values = OrchardTokenData.schemes.getValue(palette.key).getValue(if (dark) "dark" else "light")
     CompositionLocalProvider(LocalOrchardReducedMotion provides reducedMotion,
         LocalOrchardReducedTransparency provides reducedTransparency,
+        LocalOrchardGlassTint provides (if (glassTint.isFinite()) glassTint.coerceIn(0f, 1f) else OrchardTokens.glass_tint / 100f),
         LocalOrchardControlColors provides OrchardControlColors(Color(values.getValue("toggleOn")), Color(values.getValue("toggleOff")), Color(values.getValue("segmentTrack")), Color(values.getValue("segmentThumb")), Color(values.getValue("buttonFill")), Color(values.getValue("buttonText")))) {
         MaterialTheme(
             colorScheme = orchardColorScheme(palette, dark), typography = OrchardTypography,

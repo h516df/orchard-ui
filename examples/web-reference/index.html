@@ -32,6 +32,7 @@
         ><span>降低透明度</span
         ><input type="checkbox" role="switch" class="o-switch" id="opaque"
       /></label>
+      <label class="glass-appearance">Liquid Glass <output id="glass-tint-value">45%</output><input id="glass-tint" type="range" min="0" max="100" value="45" aria-label="玻璃着色"></label>
       <form method="dialog">
         <button class="o-button o-button--plain">完成</button>
       </form>
@@ -54,6 +55,12 @@
       <form method="dialog">
         <button class="o-button o-button--plain">完成</button>
       </form>
+    </dialog>
+    <div id="album-menu" class="o-anchored-menu" popover role="menu" aria-label="专辑操作"></div>
+    <p id="queue-message" role="status" class="sr-only"></p>
+    <dialog id="player" class="player-sheet" aria-label="正在播放">
+      <button class="player-handle" aria-label="切换弹层高度"><span></span></button>
+      <div class="player-body"><div class="player-art o-album-art"></div><h2></h2><p>Orchard Sessions · 本地演示</p><div class="player-controls"><button data-player-play>播放</button><button data-player-next>下一首</button></div><p class="player-queue"></p><form method="dialog"><button class="o-button o-button--plain">完成</button></form></div>
     </dialog>
     <script type="module" src="./reference.js"></script>
   </body>

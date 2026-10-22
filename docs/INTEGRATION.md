@@ -28,7 +28,7 @@ git submodule add https://github.com/h516df/orchard-ui.git vendor/orchard-ui
 ./gradlew :orchard:publishReleasePublicationToMavenLocal
 ```
 
-目标工程的 repositories 添加 `mavenLocal()`，模块依赖 `implementation("dev.h516.orchard:orchard:0.3.0")`。这是本地缓存，不是已上传 Maven Central 或 GitHub Packages；换机器需重建。
+目标工程的 repositories 添加 `mavenLocal()`，模块依赖 `implementation("dev.h516.orchard:orchard:0.4.0")`。这是本地缓存，不是已上传 Maven Central 或 GitHub Packages；换机器需重建。
 
 **选项 B：固定源码的 composite build**，适合版本相容的长期接入：
 
@@ -43,7 +43,7 @@ includeBuild("vendor/orchard-ui") {
 
 ```kotlin
 // app/build.gradle.kts
-dependencies { implementation("dev.h516.orchard:orchard:0.3.0") }
+dependencies { implementation("dev.h516.orchard:orchard:0.4.0") }
 
 // 界面入口，存储与回调继续用原项目实现
 OrchardTheme(palette = OrchardPalette.Sage) {
@@ -105,7 +105,7 @@ import {OrchardProvider, OrchardSection, OrchardSwitchRow} from '@h516df/orchard
 </OrchardProvider>
 ```
 
-宿主负责 SafeAreaProvider/安全区、系统栏、IME、路由和本地偏好。0.2确认调用改为Provider内的`useOrchardConfirm()`或受控`OrchardConfirmDialog`，不再使用默认Android Alert。`OrchardTabBar`可直接使用；背景模糊需传renderBackdrop，默认实色。编辑模板拦截 Android hardware back 与自己的返回按钮；React Navigation 的 header、beforeRemove、手势离开等必须统一连到草稿保护规则。示例见 [Gallery.tsx](../adapters/react-native/example/Gallery.tsx)。
+宿主负责 SafeAreaProvider/安全区、系统栏、IME、路由和本地偏好。0.2确认调用改为Provider内的`useOrchardConfirm()`或受控`OrchardConfirmDialog`，不再使用默认Android Alert。`OrchardTabBar`可直接使用；0.4默认接入原生材质，New Architecture/Fabric为前提。`renderBackdrop`仍可覆盖后端，降低透明度优先实色。编辑模板拦截 Android hardware back 与自己的返回按钮；React Navigation 的 header、beforeRemove、手势离开等必须统一连到草稿保护规则。示例见 [Gallery.tsx](../adapters/react-native/example/Gallery.tsx)。
 
 ## Web / React / Vue / 混合容器
 
@@ -121,3 +121,5 @@ import {OrchardProvider, OrchardSection, OrchardSwitchRow} from '@h516df/orchard
 先看 [原版对照](APPLE_APP_REFERENCES.md)，再选择骨架与组件。Compose示例在 `ReferenceApp.kt`；Flutter [NotesReference](../adapters/flutter/example/notes_reference.dart)、RN [NotesReference](../adapters/react-native/example/NotesReference.tsx) 可作为宿主接线起点。Web [交互参考](../examples/web-reference/index.html) 使用共享CSS，未绑定React/Vue。
 
 `OrchardAppPage`自带滚动容器，不放在另一个竖向ScrollView内。底部搜索/播放器覆盖内容时保留相应的滚动底部空间；RN显式传宿主安全区insets和图标，Flutter/RN的路由/存储/播放器继续用原项目能力。Compose `OrchardDestination.selectedIcon` 可提供单独选中图标。新参考页面没有用户数据库迁移需求。
+
+新版玻璃设置、引擎条件和完整可运行宿主见 [Liquid Glass](LIQUID_GLASS.md)。

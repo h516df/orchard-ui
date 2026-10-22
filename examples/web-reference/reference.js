@@ -1,3 +1,8 @@
+import {
+  setOrchardGlassTint,
+  OrchardDockController,
+  showOrchardMenu,
+} from "../../adapters/web/orchard.js";
 // Framework-free reference host. All state is local synthetic demo data.
 const paths = {
   back: "M14 5 7 12l7 7",
@@ -19,7 +24,8 @@ const paths = {
   library: "M5 2h14v2H5zM3 6h18v2H3zM2 10h20v13H2z",
   play: "m6 3 15 9-15 9z",
   pause: "M5 3h5v18H5zM14 3h5v18h-5z",
-  airplane: "M12 1c2 0 2 2 2 3v5l9 6v3l-9-4v6l3 2v2l-5-2-5 2v-2l3-2v-6l-9 4v-3l9-6V4c0-1 0-3 2-3z",
+  airplane:
+    "M12 1c2 0 2 2 2 3v5l9 6v3l-9-4v6l3 2v2l-5-2-5 2v-2l3-2v-6l-9 4v-3l9-6V4c0-1 0-3 2-3z",
   forward: "m2 4 11 8-11 8zM12 4l11 8-11 8z",
   check: "m5 12 5 5L19 7",
   trash: "M3 6h18M8 6V2h8v4M5 6l1 16h12l1-16M10 10v8m4-8v8",
@@ -82,6 +88,8 @@ const state = {
     ["雨停之后", "窗外的树叶被洗得很亮。"],
   ],
 };
+let dockController;
+const queue = [];
 const names = ["微风", "慢一点", "沿途", "日落以后"];
 const art = [
   ["#96bbad", "#294d4a"],
@@ -192,7 +200,7 @@ function albums() {
     .filter(({ name }) => !state.query || name.includes(state.query))
     .map(
       ({ name, i }) =>
-        `<button class="o-album" aria-label="播放${name}" data-track="${i}"><span class="o-album-art" style="--art-start:${art[i][0]};--art-end:${art[i][1]}"><small>ORCHARD</small><b>${name}</b></span><span>${name}</span><small>Orchard Sessions</small></button>`,
+        `<article><button class="o-album" aria-label="播放${name}" data-track="${i}"><span class="o-album-art" style="--art-start:${art[i][0]};--art-end:${art[i][1]}"><small>ORCHARD</small><b>${name}</b></span><span>${name}</span><small>Orchard Sessions</small></button><button class="album-more" aria-label="${name}的操作" data-album-menu="${i}">${icon("more")}</button></article>`,
     )
     .join("")}</div></section>`;
 }
@@ -209,7 +217,7 @@ function music() {
 }
 function dock() {
   if (state.page === "music")
-    return `<div class="o-media-dock"><div class="o-mini-player o-glass"><span class="o-mini-art">${icon("music")}</span><strong id="track-title">${state.hasTrack ? names[state.track] : "未在播放"}</strong><button aria-label="${state.playing ? "暂停" : "播放"}" data-action="play">${icon(state.playing ? "pause" : "play")}</button><button aria-label="下一首" data-action="next">${icon("forward")}</button></div><nav class="o-bottom-nav" aria-label="音乐导航">${[
+    return `<div class="o-media-dock"><div class="o-mini-player o-glass"><span class="o-mini-art">${icon("music")}</span><button data-action="player" id="track-title" class="o-player-open" aria-label="打开正在播放">${state.hasTrack ? names[state.track] : "未在播放"}</button><button aria-label="${state.playing ? "暂停" : "播放"}" data-action="play">${icon(state.playing ? "pause" : "play")}</button><button aria-label="下一首" data-action="next">${icon("forward")}</button></div><nav class="o-bottom-nav" aria-label="音乐导航">${[
       ["home", "主页"],
       ["radio", "广播"],
       ["library", "资料库"],
@@ -217,12 +225,13 @@ function dock() {
     ]
       .map(
         ([key, label]) =>
-          `<a href="#${key}" data-tab="${key}" ${state.tab === key ? 'aria-current="page"' : ""}>${icon(key === "search" ? "search" : key)}${label}</a>`,
+          `<a href="#${key}" data-tab="${key}" ${state.tab === key ? 'aria-current="page"' : ""}>${icon(key === "search" ? "search" : key)}<span class="o-tab-label">${label}</span></a>`,
       )
       .join("")}</nav></div>`;
   return `<div class="o-search-dock"><label class="o-search o-glass">${icon("search")}<input type="search" aria-label="搜索" placeholder="搜索" value="${esc(state.page === "notes" ? state.notesQuery : state.query)}" data-search="${state.page}"></label>${state.page === "notes" ? round("compose", "新建备忘录", "compose") : ""}</div>`;
 }
 function render() {
+  dockController?.destroy();
   app.dataset.page = state.page;
   app.style.setProperty(
     "--o-primary",
@@ -243,6 +252,8 @@ function render() {
     return;
   }
   app.innerHTML = `<header class="o-app-header">${state.page === "notes" || state.detail || state.selected ? round("back", "返回", "back") : ""}${round("more", "更多", "menu")}<span class="o-header-middle" aria-hidden="true">${title()}</span></header><div class="o-app-title"><h1 class="o-large-title" tabindex="-1">${title()}</h1>${state.page === "notes" ? `<p>${state.notes.length} 则备忘录</p>` : ""}</div><main class="o-app-content">${state.detail === "appearance" ? display() : state.page === "settings" ? settings() : state.page === "notes" ? notes() : music()}</main>${state.detail ? "" : dock()}`;
+  const dockElement = app.querySelector(".o-media-dock");
+  if (dockElement) dockController = new OrchardDockController(dockElement);
 }
 function openNote(i) {
   state.index = i;
@@ -370,8 +381,13 @@ document.addEventListener("click", (e) => {
       state.hasTrack = true;
       render();
       break;
+    case "player":
+      openPlayer(target);
+      break;
     case "next":
-      state.track = (state.track + 1) % names.length;
+      state.track = queue.length
+        ? queue.shift()
+        : (state.track + 1) % names.length;
       state.playing = true;
       state.hasTrack = true;
       render();
@@ -444,3 +460,121 @@ window.addEventListener(
   },
   { passive: true },
 );
+
+// Reusable anchored primitive with actual nested actions and a local play queue.
+const albumMenu = document.querySelector("#album-menu");
+let menuAlbum = 0;
+function menuItems(nested = false) {
+  albumMenu.innerHTML = nested
+    ? '<button role="menuitem" data-menu-command="back">‹ 返回</button><button role="menuitem" data-menu-command="next">插播下一首</button><button role="menuitem" data-menu-command="last">最后播放</button>'
+    : '<button role="menuitem" data-menu-command="play">现在播放</button><button role="menuitem" aria-haspopup="menu" data-menu-command="queue">添加到待播 ›</button>';
+}
+document.addEventListener("click", (e) => {
+  const trigger = e.target.closest("[data-album-menu]");
+  if (trigger) {
+    menuAlbum = Number(trigger.dataset.albumMenu);
+    menuItems();
+    showOrchardMenu(albumMenu, trigger);
+  }
+  const command = e.target.closest("[data-menu-command]")?.dataset.menuCommand;
+  if (!command) return;
+  if (command === "queue" || command === "back") {
+    menuItems(command === "queue");
+    albumMenu.querySelector("button").focus();
+    return;
+  }
+  if (command === "next") queue.unshift(menuAlbum);
+  else if (command === "last") queue.push(menuAlbum);
+  else {
+    state.track = menuAlbum;
+    state.hasTrack = true;
+    state.playing = true;
+  }
+  albumMenu.hidePopover();
+  const message = document.querySelector("#queue-message");
+  message.textContent =
+    command === "play"
+      ? `正在播放 ${names[menuAlbum]}`
+      : `${names[menuAlbum]} · 待播 ${queue.length} 首`;
+  if (command === "play") render();
+});
+document.querySelector("#glass-tint").oninput = (e) => {
+  setOrchardGlassTint(Number(e.target.value) / 100);
+  document.querySelector("#glass-tint-value").textContent =
+    `${e.target.value}%`;
+};
+function openPlayer(anchor) {
+  const sheet = document.querySelector("#player");
+  sheet.querySelector(".player-art").style.cssText =
+    `--art-start:${art[state.track][0]};--art-end:${art[state.track][1]}`;
+  sheet.querySelector(".player-art").textContent = names[state.track];
+  sheet.querySelector("h2").textContent = state.hasTrack
+    ? names[state.track]
+    : "未在播放";
+  sheet.querySelector("[data-player-play]").textContent = state.playing
+    ? "暂停"
+    : "播放";
+  sheet.querySelector(".player-queue").textContent = `待播 ${queue.length} 首`;
+  sheet.dataset.detent = "medium";
+  sheet.showModal();
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const from = anchor.getBoundingClientRect(),
+      to = sheet.getBoundingClientRect();
+    sheet.animate(
+      [
+        {
+          transform: `translate(${from.x + from.width / 2 - (to.x + to.width / 2)}px, ${from.y + from.height / 2 - (to.y + to.height / 2)}px) scale(.15,.12)`,
+          opacity: 0.4,
+        },
+        { transform: "none", opacity: 1 },
+      ],
+      { duration: 320, easing: "cubic-bezier(.2,.8,.2,1)" },
+    );
+  }
+}
+const player = document.querySelector("#player");
+player.querySelector("[data-player-play]").onclick = (e) => {
+  state.playing = !state.playing;
+  state.hasTrack = true;
+  e.target.textContent = state.playing ? "暂停" : "播放";
+  render();
+};
+player.querySelector("[data-player-next]").onclick = () => {
+  state.track = queue.length ? queue.shift() : (state.track + 1) % names.length;
+  state.hasTrack = true;
+  state.playing = true;
+  render();
+  player.querySelector("h2").textContent = names[state.track];
+  player.querySelector(".player-art").textContent = names[state.track];
+  player.querySelector(".player-art").style.cssText =
+    `--art-start:${art[state.track][0]};--art-end:${art[state.track][1]}`;
+  player.querySelector(".player-queue").textContent = `待播 ${queue.length} 首`;
+};
+const handle = player.querySelector(".player-handle");
+let dragStart;
+let suppressHandleClick = false;
+handle.onpointerdown = (e) => {
+  dragStart = e.clientY;
+  handle.setPointerCapture(e.pointerId);
+};
+handle.onpointerup = (e) => {
+  if (dragStart === undefined) return;
+  const delta = e.clientY - dragStart;
+  suppressHandleClick = Math.abs(delta) > 10;
+  if (delta < -35) player.dataset.detent = "large";
+  else if (delta > 35 && player.dataset.detent === "large")
+    player.dataset.detent = "medium";
+  else if (delta > 70) player.close();
+  dragStart = undefined;
+};
+handle.onpointercancel = () => {
+  dragStart = undefined;
+};
+handle.onclick = () => {
+  if (suppressHandleClick) {
+    suppressHandleClick = false;
+    return;
+  }
+  player.dataset.detent =
+    player.dataset.detent === "large" ? "medium" : "large";
+};

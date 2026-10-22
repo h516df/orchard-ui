@@ -17,6 +17,16 @@
 
 Gradle Wrapper 从用户 xiayizhang 的同版 Wrapper 复用，分发 URL 与 SHA256 保留。组件实现没有复制用户 App 的业务代码、数据库、签名或真实资料。
 
+## 0.4实际新增运行依赖
+
+| 来源 | 采用 | 许可 |
+| --- | --- | --- |
+| [Kyant0/AndroidLiquidGlass](https://github.com/Kyant0/AndroidLiquidGlass) | Maven Backdrop1.0.6；包含Compose折射/模糊效果，未搬运其示例素材 | Apache-2.0；[许可](third_party/backdrop-LICENSE.txt) |
+| [sdegenaar/liquid_glass_widgets](https://github.com/sdegenaar/liquid_glass_widgets) | pub1.14.0，API封装与独立音乐宿主；没有拷贝其demo图片 | MIT，Copyright2024–2026 Sebastian Degenaar；[许可](third_party/liquid_glass_widgets-LICENSE.txt) |
+| [sbaiahmed1/react-native-blur](https://github.com/sbaiahmed1/react-native-blur) | npm6.0.2，LiquidGlassView默认后端 | MIT，Copyright2025 Ahmed Sbai；[许可](third_party/react-native-blur-LICENSE.txt) |
+
+依赖的传递组件继续保留各自许可：Backdrop带shapes；RN包内含MIT的AndroidLiquidGlassView shader并依赖qmblurview。通过包管理器引用，未移除包内版权声明。版本/平台条件见[接入说明](docs/LIQUID_GLASS.md)。
+
 ## 设计与规范参考
 
 [Apple HIG](https://developer.apple.com/design/human-interface-guidelines)、[Android Compose accessibility](https://developer.android.com/develop/ui/compose/accessibility/api-defaults)、[Flutter 平台适配](https://docs.flutter.dev/ui/adaptive-responsive/platform-adaptations)、[React Native accessibility 0.83](https://reactnative.dev/docs/0.83/accessibility)。参考原则和 API，未复制品牌素材或大段规范正文。

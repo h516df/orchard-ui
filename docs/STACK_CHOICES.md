@@ -4,7 +4,7 @@
 
 ## 最新苹果视觉后端
 
-见[2026-10-22核对](research/2026-10-22-ios27.md)：Flutter liquid_glass_widgets、Compose Backdrop、Android View Liquid-Glass-Android、RN react-native-blur，以及Web实验候选。区分真实折射与blur回退，固定发布版本/源码提交；本库尚未集成。Flutter内置Cupertino或传统compose-cupertino不自动代表最新iOS27材质与交互。
+见[2026-10-22核对](research/2026-10-22-ios27.md)：Flutter liquid_glass_widgets、Compose Backdrop、Android View Liquid-Glass-Android、RN react-native-blur，以及Web实验候选。区分真实折射与blur回退，固定发布版本/源码提交；0.4实际采用Compose1.0.6/Flutter1.14.0/RN6.0.2，见[接入与兼容说明](LIQUID_GLASS.md)。Flutter内置Cupertino或传统compose-cupertino不自动代表最新iOS27材质与交互。
 
 ## 框架
 

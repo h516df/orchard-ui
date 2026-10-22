@@ -1,5 +1,9 @@
 package dev.h516.orchard
 
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.ui.input.pointer.pointerInput
+import kotlin.math.roundToInt
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,7 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.rememberGraphicsLayer
+import com.kyant.backdrop.backdrops.rememberLayerBackdrop
+import com.kyant.backdrop.backdrops.layerBackdrop
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -52,20 +57,48 @@ fun OrchardTopBar(title: String, onBack: (() -> Unit)? = null, actions: @Composa
 
 data class OrchardDestination(val key: String, val label: String, val icon: ImageVector, val selectedIcon: ImageVector = icon)
 
+/** Drag across the moving selection lens; release commits, cancellation restores selection. */
 @Composable
-fun OrchardTabBar(destinations: List<OrchardDestination>, selected: String, onSelect: (String) -> Unit) {
+fun OrchardTabBar(destinations: List<OrchardDestination>, selected: String, onSelect: (String) -> Unit, compact: Boolean = false) {
+    require(destinations.isNotEmpty())
     val c = MaterialTheme.colorScheme
-    OrchardGlassSurface(Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(bottom = 8.dp).navigationBarsPadding()) {
-        Row(Modifier.fillMaxWidth().padding(4.dp).selectableGroup(), verticalAlignment = Alignment.CenterVertically) {
-            destinations.forEach { destination ->
-                val active = selected == destination.key
-                Column(Modifier.weight(1f).clip(CircleShape).background(if (active) c.surface.copy(alpha = .85f) else Color.Transparent)
-                    .selectable(active, interactionSource = orchardPressSource(), indication = null, role = Role.Tab, onClick = { onSelect(destination.key) })
-                    .heightIn(min = (OrchardTokens.size_tab - 8).dp).padding(horizontal = 6.dp, vertical = 4.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                    Icon(if (active) destination.selectedIcon else destination.icon, null, tint = if (active) c.primary else c.onSurface, modifier = Modifier.size(24.dp))
-                    Text(destination.label, color = if (active) c.primary else c.onSurface,
-                        style = MaterialTheme.typography.labelMedium.copy(fontSize = 10.sp, lineHeight = 13.sp, fontWeight = FontWeight.SemiBold))
+    val reduced = LocalOrchardReducedMotion.current
+    val large = LocalDensity.current.fontScale > 1.5f
+    val minimized = compact && !large
+    val fraction by animateFloatAsState(if (minimized) .72f else 1f, if (reduced) snap() else spring(dampingRatio = .85f, stiffness = 450f), label = "dock-width")
+    var dragging by remember { mutableStateOf<Float?>(null) }
+    val activeIndex = destinations.indexOfFirst { it.key == selected }.coerceAtLeast(0)
+    val lensIndex by animateFloatAsState(dragging ?: activeIndex.toFloat(), if (reduced) snap() else spring(dampingRatio = .78f, stiffness = 500f), label = "selection-lens")
+    BoxWithConstraints(Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(bottom = 8.dp).navigationBarsPadding(), contentAlignment = Alignment.Center) {
+        val width = maxWidth * fraction
+        val slot = (width - 8.dp) / destinations.size
+        val slotPx = with(LocalDensity.current) { slot.toPx() }
+        OrchardGlassSurface(Modifier.width(width).semantics { stateDescription = if (minimized) "导航已收起" else "导航已展开" }) {
+            Box(Modifier.fillMaxWidth().padding(4.dp)) {
+                Box(Modifier.offset(x = slot * lensIndex).width(slot).height(50.dp)
+                    .clip(CircleShape).background(c.onSurface.copy(alpha = if (dragging != null) .12f else .08f)))
+                Row(Modifier.fillMaxWidth().selectableGroup().pointerInput(destinations, selected, slotPx) {
+                    var x = 0f
+                    detectHorizontalDragGestures(
+                        onDragStart = { x = it.x; dragging = (x / slotPx - .5f).coerceIn(0f, destinations.lastIndex.toFloat()) },
+                        onHorizontalDrag = { change, delta -> change.consume(); x += delta; dragging = (x / slotPx - .5f).coerceIn(0f, destinations.lastIndex.toFloat()) },
+                        onDragCancel = { dragging = null },
+                        onDragEnd = { dragging?.let { onSelect(destinations[it.roundToInt()].key) }; dragging = null })
+                }, verticalAlignment = Alignment.CenterVertically) {
+                    destinations.forEach { destination ->
+                        val active = selected == destination.key
+                        Column(Modifier.weight(1f).clip(CircleShape)
+                            .selectable(active, interactionSource = orchardPressSource(), indication = null, role = Role.Tab, onClick = { onSelect(destination.key) })
+                            .semantics { contentDescription = destination.label }
+                            .heightIn(min = 50.dp).padding(horizontal = 4.dp, vertical = 4.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                            Icon(if (active) destination.selectedIcon else destination.icon, null, tint = if (active) c.primary else c.onSurface, modifier = Modifier.size(24.dp))
+                            androidx.compose.animation.AnimatedVisibility(!minimized, enter = androidx.compose.animation.expandVertically(if (reduced) snap() else tween(150)), exit = androidx.compose.animation.shrinkVertically(if (reduced) snap() else tween(150))) {
+                                Text(destination.label, color = if (active) c.primary else c.onSurface,
+                                    style = MaterialTheme.typography.labelMedium.copy(fontSize = 10.sp, lineHeight = 13.sp, fontWeight = FontWeight.SemiBold))
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -77,15 +110,11 @@ fun OrchardScaffold(
     modifier: Modifier = Modifier, topBar: @Composable () -> Unit = {}, bottomBar: (@Composable () -> Unit)? = null,
     snackbarHost: @Composable () -> Unit = {}, content: @Composable (PaddingValues) -> Unit,
 ) {
-    val layer = rememberGraphicsLayer()
-    val backdrop = remember(layer) { OrchardBackdrop(layer) }
+    val backdrop = rememberLayerBackdrop()
     CompositionLocalProvider(LocalOrchardBackdrop provides backdrop) {
         Scaffold(modifier = modifier.fillMaxSize(), containerColor = MaterialTheme.colorScheme.background,
             topBar = topBar, bottomBar = { bottomBar?.invoke() }, snackbarHost = snackbarHost) { padding ->
-            Box(Modifier.fillMaxSize().onGloballyPositioned { backdrop.origin = it.positionInRoot() }.drawWithContent {
-                layer.record { this@drawWithContent.drawContent() }
-                drawLayer(layer)
-            }) {
+            Box(Modifier.fillMaxSize().layerBackdrop(backdrop)) {
                 // A surface inside the recorded content must never sample its own graphics layer.
                 CompositionLocalProvider(LocalOrchardBackdrop provides null) { content(padding) }
             }
@@ -110,7 +139,7 @@ fun OrchardSnackbarHost(state: SnackbarHostState, modifier: Modifier = Modifier)
 fun OrchardSheet(title: String, onDismiss: () -> Unit, canDismiss: Boolean = true, onDismissBlocked: () -> Unit = {}, content: @Composable ColumnScope.() -> Unit) {
     val latestCanDismiss by rememberUpdatedState(canDismiss)
     val latestBlocked by rememberUpdatedState(onDismissBlocked)
-    val state = rememberModalBottomSheetState(skipPartiallyExpanded = true, confirmValueChange = { target ->
+    val state = rememberModalBottomSheetState(skipPartiallyExpanded = false, confirmValueChange = { target ->
         if (target == SheetValue.Hidden && !latestCanDismiss) { latestBlocked(); false } else true
     })
     ModalBottomSheet(onDismissRequest = { if (latestCanDismiss) onDismiss() else latestBlocked() }, sheetState = state,

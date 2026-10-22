@@ -231,4 +231,9 @@ abstract final class OrchardTokens {
   static const double motionFast = 150;
   static const double motionNormal = 250;
   static const double motionSlow = 360;
+  static const double glassTint = 45;
+  static const double glassBlurMin = 4;
+  static const double glassBlurMax = 16;
+  static const double glassLensRim = 16;
+  static const double glassLensDepth = 32;
 }

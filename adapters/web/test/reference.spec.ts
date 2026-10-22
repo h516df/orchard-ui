@@ -108,14 +108,57 @@ test("three pages render light and dark; narrow large type keeps docks within vi
   }
 });
 
-test('scrolling replaces large title with compact navigation and keeps actions usable', async ({page}) => {
-  await page.setViewportSize({width:393,height:600});
-  await page.goto(url + '?page=notes');
+test("scrolling replaces large title with compact navigation and keeps actions usable", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 393, height: 600 });
+  await page.goto(url + "?page=notes");
   await page.evaluate(() => window.scrollTo(0, 300));
-  await expect(page.locator('.o-header-middle')).toHaveCSS('opacity', '1');
-  await page.getByRole('button', {name: '更多', exact: true}).click();
-  await expect(page.getByRole('dialog', {name: '参考页面'})).toBeVisible();
-  await page.keyboard.press('Escape');
-  await page.emulateMedia({reducedMotion: 'reduce'});
-  await expect(page.locator('.o-header-middle')).toHaveCSS('transition-duration', '0s');
+  await expect(page.locator(".o-header-middle")).toHaveCSS("opacity", "1");
+  await page.getByRole("button", { name: "更多", exact: true }).click();
+  await expect(page.getByRole("dialog", { name: "参考页面" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(page.locator(".o-header-middle")).toHaveCSS(
+    "transition-duration",
+    "0s",
+  );
+});
+
+test("continuous appearance, scroll collapse, nested menu queue and sheet detents work", async ({
+  page,
+}) => {
+  await page.goto(url + "?page=music");
+  await page.getByRole("button", { name: "更多", exact: true }).click();
+  await page.getByRole("slider", { name: "玻璃着色" }).fill("85");
+  await expect(page.locator("html")).toHaveCSS("--o-glass-tint", "85");
+  await page.keyboard.press("Escape");
+  await page.evaluate(() => window.scrollTo(0, 340));
+  await expect(page.locator(".o-media-dock")).toHaveAttribute(
+    "data-collapsed",
+    "true",
+  );
+  await page.evaluate(() => window.scrollTo(0, 100));
+  await expect(page.locator(".o-media-dock")).toHaveAttribute(
+    "data-collapsed",
+    "false",
+  );
+  await page.getByRole("button", { name: "微风的操作", exact: true }).click();
+  await expect(page.getByRole("menu", { name: "专辑操作" })).toBeVisible();
+  await page.getByRole("menuitem", { name: "添加到待播" }).click();
+  await page.getByRole("menuitem", { name: "插播下一首" }).click();
+  await expect(page.getByRole("status")).toHaveText("微风 · 待播 1 首");
+  await page.getByRole("button", { name: "播放慢一点", exact: true }).click();
+  await page.getByRole("button", { name: "下一首", exact: true }).click();
+  await expect(page.locator("#track-title")).toHaveText("微风");
+  await page.getByRole("button", { name: "打开正在播放" }).click();
+  const player = page.getByRole("dialog", { name: "正在播放" });
+  await expect(player).toBeVisible();
+  await expect(player).toHaveAttribute("data-detent", "medium");
+  await player.getByRole("button", { name: "切换弹层高度" }).click();
+  await expect(player).toHaveAttribute("data-detent", "large");
+  await page.keyboard.press("Escape");
+  await expect(
+    page.getByRole("button", { name: "打开正在播放" }),
+  ).toBeFocused();
 });

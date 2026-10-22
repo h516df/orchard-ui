@@ -235,4 +235,9 @@ object OrchardTokens {
     const val motion_fast = 150
     const val motion_normal = 250
     const val motion_slow = 360
+    const val glass_tint = 45
+    const val glass_blurMin = 4
+    const val glass_blurMax = 16
+    const val glass_lensRim = 16
+    const val glass_lensDepth = 32
 }

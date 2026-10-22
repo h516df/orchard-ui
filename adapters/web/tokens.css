@@ -28,6 +28,11 @@
   --o-motion-fast: 150ms;
   --o-motion-normal: 250ms;
   --o-motion-slow: 360ms;
+  --o-glass-tint: 45;
+  --o-glass-blurMin: 4px;
+  --o-glass-blurMax: 16px;
+  --o-glass-lensRim: 16px;
+  --o-glass-lensDepth: 32px;
 }
 :root, [data-orchard-palette="blue"][data-orchard-mode="light"] {
   color-scheme: light;

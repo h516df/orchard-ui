@@ -26,6 +26,7 @@ import {
   type ViewStyle,
   type TextInputProps,
 } from "react-native";
+import { LiquidGlassView } from "@sbaiahmed1/react-native-blur";
 import {
   orchardSchemes,
   orchardTokens,
@@ -52,12 +53,16 @@ type OrchardContextValue = {
   colors: OrchardColors;
   reducedMotion: boolean;
   dark: boolean;
+  glassTint: number;
+  reducedTransparency: boolean;
   confirm: Confirm;
 };
 const OrchardContext = createContext<OrchardContextValue>({
   colors: orchardSchemes.blue.light,
   reducedMotion: false,
   dark: false,
+  glassTint: orchardTokens.glass.tint / 100,
+  reducedTransparency: false,
   confirm: missingConfirm,
 });
 export const useOrchard = () => useContext(OrchardContext);
@@ -68,11 +73,15 @@ export function OrchardProvider({
   palette = "blue",
   mode = "system",
   reduceMotion,
+  reducedTransparency = false,
+  glassTint = orchardTokens.glass.tint / 100,
 }: {
   children: ReactNode;
   palette?: OrchardPalette;
   mode?: "light" | "dark" | "system";
   reduceMotion?: boolean;
+  reducedTransparency?: boolean;
+  glassTint?: number;
 }) {
   const [dialog, setDialog] = useState<OrchardConfirmOptions>();
   const pending = React.useRef<((value: boolean) => void) | undefined>(
@@ -119,11 +128,33 @@ export function OrchardProvider({
       listener.remove();
     };
   }, []);
+  const [systemOpaque, setSystemOpaque] = useState(false);
+  useEffect(() => {
+    if (Platform.OS !== "ios") return;
+    let alive = true;
+    AccessibilityInfo.isReduceTransparencyEnabled()
+      .then((value) => {
+        if (alive) setSystemOpaque(value);
+      })
+      .catch(() => {});
+    const listener = AccessibilityInfo.addEventListener(
+      "reduceTransparencyChanged",
+      setSystemOpaque,
+    );
+    return () => {
+      alive = false;
+      listener.remove();
+    };
+  }, []);
   return (
     <OrchardContext.Provider
       value={{
         colors: orchardSchemes[palette][dark ? "dark" : "light"],
         dark,
+        glassTint: Number.isFinite(glassTint)
+          ? Math.max(0, Math.min(1, glassTint))
+          : orchardTokens.glass.tint / 100,
+        reducedTransparency: reducedTransparency || systemOpaque,
         reducedMotion: systemReduced || reduceMotion === true,
         confirm,
       }}
@@ -842,13 +873,25 @@ export function OrchardReadingSurface({
     </View>
   );
 }
-/** Supply a native blur view through renderBackdrop; the default is an opaque, legible fallback. */
+/** Native refraction on Android33+/iOS26+; older OS blur; accessibility always opaque. */
 export function OrchardGlassSurface({
   children,
   renderBackdrop,
   style,
 }: BoxProps & { renderBackdrop?: () => ReactNode }) {
-  const { colors: c } = useOrchard();
+  const {
+    colors: c,
+    glassTint,
+    reducedTransparency,
+    reducedMotion,
+  } = useOrchard();
+  const { fontScale } = useWindowDimensions();
+  const opaque = reducedTransparency || fontScale > 1.5;
+  const body = (
+    <View style={{ backgroundColor: opaque ? c.surface : "transparent" }}>
+      {children}
+    </View>
+  );
   return (
     <View
       style={[
@@ -866,22 +909,41 @@ export function OrchardGlassSurface({
         style={{
           borderRadius: 999,
           overflow: "hidden",
-          borderWidth: 1,
+          borderWidth: 0.75,
           borderColor: c.divider,
         }}
       >
-        {renderBackdrop ? (
-          <View pointerEvents="none" style={StyleSheet.absoluteFill}>
-            {renderBackdrop()}
-          </View>
-        ) : null}
-        <View
-          style={{
-            backgroundColor: renderBackdrop ? `${c.surface}DF` : c.surface,
-          }}
-        >
-          {children}
-        </View>
+        {opaque ? (
+          body
+        ) : renderBackdrop ? (
+          <>
+            <View pointerEvents="none" style={StyleSheet.absoluteFill}>
+              {renderBackdrop()}
+            </View>
+            <View
+              style={{
+                backgroundColor: `${c.surface}${Math.round(
+                  (0.18 + glassTint * 0.78) * 255,
+                )
+                  .toString(16)
+                  .padStart(2, "0")}`,
+              }}
+            >
+              {children}
+            </View>
+          </>
+        ) : (
+          <LiquidGlassView
+            glassType="regular"
+            glassTintColor={c.surface}
+            glassOpacity={0.18 + glassTint * 0.78}
+            reducedTransparencyFallbackColor={c.surface}
+            isInteractive={!reducedMotion}
+            style={{ borderRadius: 999 }}
+          >
+            {body}
+          </LiquidGlassView>
+        )}
       </View>
     </View>
   );
@@ -896,19 +958,80 @@ export function OrchardTabBar({
   selected,
   onSelect,
   bottomInset = 0,
+  compact = false,
   renderBackdrop,
 }: {
   destinations: readonly OrchardDestination[];
   selected: string;
   onSelect: (key: string) => void;
   bottomInset?: number;
+  compact?: boolean;
   renderBackdrop?: () => ReactNode;
 }) {
-  const { colors: c } = useOrchard();
+  const { colors: c, reducedMotion } = useOrchard();
+  const { fontScale } = useWindowDimensions();
+  const minimized = compact && fontScale <= 1.5;
+  const inset = React.useRef(new Animated.Value(24)).current;
+  const lens = React.useRef(
+    new Animated.Value(
+      Math.max(
+        0,
+        destinations.findIndex((d) => d.key === selected),
+      ),
+    ),
+  ).current;
+  const [width, setWidth] = useState(0);
+  useEffect(() => {
+    const animation = Animated.timing(inset, {
+      toValue: minimized ? 60 : 24,
+      duration: reducedMotion ? 0 : 250,
+      useNativeDriver: false,
+    });
+    animation.start();
+    return () => animation.stop();
+  }, [inset, minimized, reducedMotion]);
+  useEffect(() => {
+    const index = Math.max(
+      0,
+      destinations.findIndex((d) => d.key === selected),
+    );
+    if (reducedMotion) {
+      lens.setValue(index);
+      return;
+    }
+    const animation = Animated.spring(lens, {
+      toValue: index,
+      damping: 24,
+      stiffness: 400,
+      mass: 1,
+      useNativeDriver: false,
+    });
+    animation.start();
+    return () => animation.stop();
+  }, [destinations, selected, reducedMotion, lens]);
+  const slot = width / Math.max(destinations.length, 1);
   return (
-    <View style={{ paddingHorizontal: 24, paddingBottom: bottomInset + 8 }}>
+    <Animated.View
+      accessibilityValue={{ text: minimized ? "导航已收起" : "导航已展开" }}
+      style={{ paddingHorizontal: inset, paddingBottom: bottomInset + 8 }}
+    >
       <OrchardGlassSurface renderBackdrop={renderBackdrop}>
-        <View style={{ flexDirection: "row", padding: 4 }}>
+        <View
+          style={{ flexDirection: "row", margin: 4 }}
+          onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
+        >
+          <Animated.View
+            pointerEvents="none"
+            style={{
+              position: "absolute",
+              left: Animated.multiply(lens, slot),
+              top: 0,
+              bottom: 0,
+              width: slot,
+              backgroundColor: `${c.text}12`,
+              borderRadius: 999,
+            }}
+          />
           {destinations.map((destination) => {
             const active = destination.key === selected;
             const color = active ? c.primary : c.text;
@@ -916,6 +1039,7 @@ export function OrchardTabBar({
               <Pressable
                 key={destination.key}
                 accessibilityRole="tab"
+                accessibilityLabel={destination.label}
                 accessibilityState={{ selected: active }}
                 onPress={() => onSelect(destination.key)}
                 style={{
@@ -926,19 +1050,21 @@ export function OrchardTabBar({
                   paddingHorizontal: 6,
                   paddingVertical: 4,
                   borderRadius: 999,
-                  backgroundColor: active ? c.surface : "transparent",
+                  backgroundColor: "transparent",
                 }}
               >
                 {destination.icon(color)}
-                <Text style={{ fontSize: 10, fontWeight: "600", color }}>
-                  {destination.label}
-                </Text>
+                {!minimized && (
+                  <Text style={{ fontSize: 10, fontWeight: "600", color }}>
+                    {destination.label}
+                  </Text>
+                )}
               </Pressable>
             );
           })}
         </View>
       </OrchardGlassSurface>
-    </View>
+    </Animated.View>
   );
 }
 export function OrchardSheet({
@@ -1298,6 +1424,7 @@ export function OrchardAppPage({
   bottomContentInset = 100,
   insets = { top: 0, bottom: 0 },
   backgroundColor,
+  onDockCollapsedChange,
 }: BoxProps & {
   title: string;
   subtitle?: string;
@@ -1307,9 +1434,11 @@ export function OrchardAppPage({
   bottomContentInset?: number;
   insets?: { top: number; bottom: number };
   backgroundColor?: string;
+  onDockCollapsedChange?: (collapsed: boolean) => void;
 }) {
   const { colors: c } = useOrchard();
   const scroll = React.useRef(new Animated.Value(0)).current;
+  const direction = React.useRef({ last: 0, travel: 0, collapsed: false });
   const opacity = scroll.interpolate({
     inputRange: [48, 72],
     outputRange: [0, 1],
@@ -1322,7 +1451,26 @@ export function OrchardAppPage({
         keyboardShouldPersistTaps="handled"
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scroll } } }],
-          { useNativeDriver: true },
+          {
+            useNativeDriver: true,
+            listener: (event: {
+              nativeEvent: { contentOffset: { y: number } };
+            }) => {
+              const y = event.nativeEvent.contentOffset.y;
+              const d = direction.current;
+              const delta = y - d.last;
+              d.travel = delta > 0 === d.travel > 0 ? d.travel + delta : delta;
+              const collapsed =
+                y < 48 || d.travel < -20
+                  ? false
+                  : d.travel > 48
+                    ? true
+                    : d.collapsed;
+              if (collapsed !== d.collapsed) onDockCollapsedChange?.(collapsed);
+              d.collapsed = collapsed;
+              d.last = y;
+            },
+          },
         )}
         contentContainerStyle={{
           paddingTop: insets.top,

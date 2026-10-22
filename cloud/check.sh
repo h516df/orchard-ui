@@ -15,6 +15,7 @@ android() {
 flutter_check() {
   command -v flutter >/dev/null || { echo 'Install Flutter 3.41.5 and add it to PATH.' >&2; return 1; }
   (cd adapters/flutter && flutter pub get && flutter analyze && flutter test)
+  (cd examples/flutter-liquid && flutter pub get && flutter analyze && flutter test)
 }
 react_native() {
   (cd adapters/react-native && if [[ ! -d node_modules ]]; then npm ci; fi && npm run typecheck && npm test)

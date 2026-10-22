@@ -2,11 +2,11 @@
 
 **给 h516df 的跨项目 UI / UX 复用库。苹果风视觉，安卓友好的交互，不绑定技术栈。私有仓库。**
 
-**0.3 改为按苹果 App 的完整页面重做：设置、备忘录、音乐。** [查看新版实际预览](docs/previews/README.md) · [原版对照与实现范围](docs/APPLE_APP_REFERENCES.md)
+**0.4 接入新版玻璃材质与音乐动态流程：折射、连续着色、收起底栏、分层菜单和半屏播放器。** [查看新版实际预览](docs/previews/README.md) · [原版对照与实现范围](docs/APPLE_APP_REFERENCES.md)
 
 不是每个新项目重新调一遍圆角、列表和保存流程。把共同的视觉变量、组件与体验规则集中在这里，项目保留自己的产品性格和数据逻辑。
 
-当前版本校正：0.3示例混用了旧版参考，未达到最新iOS27的完整视觉/交互目标。[最新iOS与GitHub候选核对](docs/research/2026-10-22-ios27.md)列出正式版本、现有缺项和多框架候选；这些依赖尚未集成。
+当前采用与边界见 [Liquid Glass 接入说明](docs/LIQUID_GLASS.md)：Compose、Flutter、RN 已接入独立材质后端；Web 保留可读的模糊近似。完整动态流程在 Compose、Flutter 示例与 Web 中可运行。当前参考基线来自 [2026-10-22 官方资料核对](docs/research/2026-10-22-ios27.md)，未取得用户视觉验收或实体设备性能验收。
 
 ## 从这里开始
 
@@ -29,6 +29,7 @@
 - **React Native 适配层**：[代码](adapters/react-native/src)；主题 Provider、常用组件、弹层和草稿编辑，使用 React Native primitives。
 - **Web 适配层**：[样式与接入](adapters/web/README.md)；语义 HTML + CSS，可用于 React、Vue、Svelte 或混合容器。交互由宿主负责。
 - **框架无关交互参考**：[Web 三页示例](examples/web-reference)，也能构建离线单文件预览；无公开部署。
+- **Flutter 可运行音乐示例**：[独立宿主](examples/flutter-liquid)，可构建 Android APK 和 Web；导航材质在滚动内容之外合成。
 - **安卓展示 App**：[Compose Catalog](examples/compose-catalog)；默认设置页，可切换备忘录列表/编辑、音乐资料库与组件目录。包名独立，不接触现有 App 数据。
 - **开发资料**：UX 状态规则、页面配方、选型边界、审查表、项目接入模板、来源与许可说明。
 
