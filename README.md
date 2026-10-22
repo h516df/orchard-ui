@@ -14,6 +14,7 @@
 | --- | --- |
 | 让一个新项目沿用这套风格 | [接入指南](docs/INTEGRATION.md) · [给开发助手的规则](templates/AGENTS.fragment.md) |
 | 决定用什么技术或成熟组件 | [技术与资源选型](docs/STACK_CHOICES.md) |
+| 找 UI 网站、苹果规范、完整页面与动效参考 | [设计参考库](docs/DESIGN_RESOURCES.md) · [参考记录模板](templates/DESIGN_REFERENCE.md) |
 | 调整配色、字号、间距和材质 | [视觉基础](docs/FOUNDATIONS.md) · [共享变量](tokens/orchard.json) |
 | 找可复用组件及实际覆盖范围 | [组件目录](docs/COMPONENTS.md) |
 | 设计编辑、导入、搜索、阅读等流程 | [UX 模式](docs/UX_PATTERNS.md) · [页面配方](docs/SCREEN_RECIPES.md) |

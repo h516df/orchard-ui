@@ -1,3 +1,18 @@
+# 验证记录 · 设计参考资料整理
+
+2026-10-22，任务OUI-007，基线main `3ce65bd`加`docs/design-resource-library`本批文档/模板工作树。新增[设计参考库](DESIGN_RESOURCES.md)与[参考记录模板](../templates/DESIGN_REFERENCE.md)，并更新导航、助手入口、需求池和交接。
+
+| 检查 | 实际结果 | 范围 |
+| --- | --- | --- |
+| `bash cloud/check.sh quick` | passed | 生成同步、Markdown本地链接、3项共享变量测试 |
+| `git diff --check` | passed | 本批差异无空白错误 |
+| 人工审阅来源与导航 | completed | 与本次已核对的公开资料比对；区分官方/真实页面/概念、免费/订阅与候选/已采用 |
+| Android / Flutter / RN / Web构建与UI测试 | not run | 本批无运行时改动，不沿用历史测试冒充本批结果 |
+
+未重新批量请求外部站点、未访问付费内容；站点条件标明2026-10-22核对日期，未来使用时按具体问题刷新。Markdown检查只证明本地链接目标存在，不证明所有外部网址持续可用。
+
+---
+
 # 验证记录 · 0.4 Liquid Glass与动态流程
 
 交付：[PR #5](https://github.com/h516df/orchard-ui/pull/5)已合入私有main（`c3431e1073d5cac057530ba742b1e9b39c887b01`），[v0.4.0](https://github.com/h516df/orchard-ui/releases/tag/v0.4.0)保存源码版本。构建产物已在本地生成，GitHub Release附件上传接口返回HTTP401，未上传成功；不把源码发布当成附件上传成功。没有触发Actions或公开部署。
