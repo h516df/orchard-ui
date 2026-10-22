@@ -2,6 +2,8 @@
 
 先看项目现状、团队熟悉度与功能约束，再选技术。苹果风是设计方向，不是选择 Kotlin、Flutter、RN 或 Web 的理由。以下引用用于选型，除“已依赖”外均未自动集成；采用具体版本前核对维护状态、许可证、包体、系统版本和测试。
 
+查 UI / UX 网站、官方规范、完整页面与实际动效，先用[设计参考库](DESIGN_RESOURCES.md)；其中含访问门槛、检索词与参考到实现的步骤。视觉参考与运行时依赖分别记录。
+
 ## 最新苹果视觉后端
 
 见[2026-10-22核对](research/2026-10-22-ios27.md)：Flutter liquid_glass_widgets、Compose Backdrop、Android View Liquid-Glass-Android、RN react-native-blur，以及Web实验候选。区分真实折射与blur回退，固定发布版本/源码提交；0.4实际采用Compose1.0.6/Flutter1.14.0/RN6.0.2，见[接入与兼容说明](LIQUID_GLASS.md)。Flutter内置Cupertino或传统compose-cupertino不自动代表最新iOS27材质与交互。
