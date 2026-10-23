@@ -1,6 +1,11 @@
 # Orchard UI · 果园
 
-**给 h516df 的跨项目 UI / UX 复用库。苹果风视觉，安卓友好的交互，不绑定技术栈。私有仓库。**
+**跨项目 UI / UX 复用库。苹果风视觉，安卓友好的交互，不绑定技术栈。**
+
+> **许可证**：MIT，见 [LICENSE](LICENSE)。
+> **状态**：可用但未完整验收。Compose / Flutter / React Native / Web 四套适配器都有可运行示例；
+> 视觉验收与实体设备性能验收尚未完成，采用前请自己在目标设备上看一遍。
+> 第三方组件均为 MIT / Apache-2.0，归属见 [third_party](third_party)。
 
 **0.4 接入新版玻璃材质与音乐动态流程：折射、连续着色、收起底栏、分层菜单和半屏播放器。** [查看新版实际预览](docs/previews/README.md) · [原版对照与实现范围](docs/APPLE_APP_REFERENCES.md)
 
